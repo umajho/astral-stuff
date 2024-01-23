@@ -1,0 +1,7 @@
+{
+  "name": "astral-dice-types",
+  "types": "src/mod.d.ts",
+  "type": "module",
+  "author": "Umaĵo",
+  "license": "MIT"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "rollup-plugin-astral-dice",
+  "main": "src/mod.js",
+  "type": "module",
+  "author": "Umaĵo",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^4.9.6"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5"
+  }
+}

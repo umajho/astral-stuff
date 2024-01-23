@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "rimraf dist && tsc && rollup -c",
+    "test": "vitest"
+  },
+  "author": "Umaĵo",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "astral-dice-types": "workspace:*",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.6",
+    "rollup-plugin-astral-dice": "workspace:*",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "dependencies": {
+    "yaml": "^2.3.4"
+  }
+}

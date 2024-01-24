@@ -2,7 +2,7 @@ const defaultTexts = {
   "ONLY_IN_GROUP": "请在群组中游玩！",
   "BULLETS_0": "至少要装入一枚子弹！",
   "BULLETS_FULL": "？？子弹已装满。",
-  "BULLETS_TOO_MUCH": "装不下这么多子弹！",
+  "BULLETS_TOO_MANY": "装不下这么多子弹！",
   "RELOADED": "装入{bullets}枚子弹！",
   "DEAD": "{user}中弹！",
   "ALIVE": "{user}生还！",

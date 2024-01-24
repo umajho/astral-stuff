@@ -30,7 +30,7 @@ export class Game {
     }
 
     if (!n) return TEXTS.BULLETS_0;
-    if (n > CYLINDER_CAPACITY) return TEXTS.BULLETS_TOO_MUCH;
+    if (n > CYLINDER_CAPACITY) return TEXTS.BULLETS_TOO_MANY;
 
     this._state = Game.newStateWithCylinder(Game.createCylinder(n));
     return n === CYLINDER_CAPACITY

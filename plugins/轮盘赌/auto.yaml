@@ -1,5 +1,3 @@
-homepage: https://github.com/umajho/astral-stuff/tree/main/plugins/轮盘赌
-
 keywordRegexp: '^(装\d*弹|重新装弹|扣动扳机)$'
 program: "【执行脚本 【读项目 js】, 【正则匹配到的 0】, 【发送者QQ】】\n"
 

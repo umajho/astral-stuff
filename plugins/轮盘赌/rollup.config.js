@@ -1,3 +1,5 @@
+import packageJSON from "./package.json" assert { type: "json" };
+
 import fs from "node:fs/promises";
 
 import YAML from "yaml";
@@ -10,7 +12,12 @@ import rollupPluginAstralDice from "rollup-plugin-astral-dice";
 
 const auto = await (async () => {
   const file = await fs.readFile("auto.yaml");
-  return YAML.parse(file.toString());
+  const auto = YAML.parse(file.toString());
+  return {
+    ...(packageJSON.version ? { version: packageJSON.version } : {}),
+    ...(packageJSON.homepage ? { homepage: packageJSON.homepage } : {}),
+    ...auto,
+  };
 })();
 
 /** @type {import("rollup").RollupOptions} */

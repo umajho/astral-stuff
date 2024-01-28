@@ -22,7 +22,7 @@ const auto = await (async () => {
 
 /** @type {import("rollup").RollupOptions} */
 const options = {
-  input: "./build/mod.js",
+  input: "./src/mod.ts",
   output: {
     file: "./dist/mod.js",
     format: "iife",

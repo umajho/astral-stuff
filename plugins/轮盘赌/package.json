@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "rimraf dist && tsc && rollup -c",
+    "build": "rimraf dist && rollup -c",
     "test": "vitest"
   },
   "author": "Umaĵo",
@@ -17,7 +17,6 @@
     "rollup": "^4.9.6",
     "rollup-plugin-astral-dice": "workspace:*",
     "tslib": "^2.6.2",
-    "typescript": "^5.3.3",
     "vitest": "^1.2.1"
   },
   "dependencies": {

@@ -1,0 +1,34 @@
+{
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "run-p build:*",
+    "build:plugin": "rimraf dist && rollup -c",
+    "build:usage": "deno run ./scripts/generate-usage-html.ts > USAGE.md",
+    "test": "vitest"
+  },
+  "author": "Umaĵo",
+  "homepage": "https://github.com/umajho/astral-stuff/tree/main/plugins/卡组",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@vitest/ui": "^1.2.2",
+    "astral-dice-types": "workspace:*",
+    "js-base64": "^3.7.6",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.6",
+    "rollup-plugin-astral-dice": "workspace:*",
+    "snabbdom": "^3.5.1",
+    "snabbdom-to-html": "^7.1.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "dependencies": {
+    "yaml": "^2.3.4"
+  }
+}

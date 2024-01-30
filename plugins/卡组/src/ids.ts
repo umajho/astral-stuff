@@ -4,6 +4,9 @@ export class UserID {
 export class GroupID {
   constructor(public readonly groupID: string) {}
 }
+export class ScopeID {
+  constructor(public readonly scopeID: string) {}
+}
 export class DeckName {
   constructor(public readonly deckName: string) {}
 }

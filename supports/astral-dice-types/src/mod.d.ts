@@ -24,6 +24,10 @@ namespace Lib {
    */
   function setValue(key: string, value: string);
   /**
+   * 目前只能确定把第二个参数设为 “0” 能删除掉变量。
+   */
+  function setValueExpireTime(key: string, zero: 0);
+  /**
    * 获取配置（同一 `auto` 下名为 key 的属性）。
    */
   function getConfig(key: string): String;

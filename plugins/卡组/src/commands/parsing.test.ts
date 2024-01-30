@@ -22,12 +22,12 @@ const COMMAND_CASES = {
     "列表": {
       examples: {},
     },
-    "群组设置": {
+    "领域设置": {
       examples: {
         "\n默认卡组 塔罗牌": {
           type: "plugin",
           payload: {
-            type: "群组设置",
+            type: "领域设置",
             attributeSetters: { "默认卡组": "塔罗牌" },
           },
         },
@@ -36,12 +36,12 @@ const COMMAND_CASES = {
         "INVALID\nFoo 42": ["error"],
         "": ["ok", {
           type: "plugin",
-          payload: { type: "群组设置", attributeSetters: {} },
+          payload: { type: "领域设置", attributeSetters: {} },
         }],
         "\nFoo 42\nBar": ["ok", {
           type: "plugin",
           payload: {
-            type: "群组设置",
+            type: "领域设置",
             attributeSetters: { "Foo": "42", "Bar": null },
           },
         }],
@@ -85,12 +85,12 @@ const COMMAND_CASES = {
             keepsOrderOfCards: false,
           },
         },
-        "+不放回 +群组默认\n日志输出群 1234567890": {
+        "+不放回 +领域默认\n日志输出群 1234567890": {
           type: "deck_existence",
           deckName: TEST_DECK_NAME,
           payload: {
             type: "创建",
-            flagSetters: ["+不放回", "+群组默认"],
+            flagSetters: ["+不放回", "+领域默认"],
             attributeSetters: { "日志输出群": "1234567890" },
             cards: [],
             keepsOrderOfCards: false,

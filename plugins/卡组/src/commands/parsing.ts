@@ -88,14 +88,14 @@ function tryParsePluginCommand(
       if (!rest) return ["ok", { type: cmd }];
       return errorShouldNotHaveArguments(TYPE, cmd);
 
-    case "群组设置": {
+    case "领域设置": {
       const lines = (rest ?? "").split("\n");
       if (lines[0].trim()) {
         return errorBadArguments(TYPE, cmd, "第一行不能带有参数");
       }
       const result = parseAttributeSetters(lines.slice(1));
       if (result[0] === "error") return errorBadArguments(TYPE, cmd, result[1]);
-      return ["ok", { type: "群组设置", attributeSetters: result[1] }];
+      return ["ok", { type: "领域设置", attributeSetters: result[1] }];
     }
 
     default:

@@ -9,8 +9,9 @@ export interface CardNameWithOptionalAmount {
   amount: number | null | "all";
 }
 
-export interface CardNameWithDescriptionAndOptionalAmount
-  extends CardNameWithOptionalAmount {
+export interface CardNameWithDescriptionAndOptionalAmount {
+  name: CardName;
+  amount: number | null;
   description: string;
 }
 
@@ -65,8 +66,8 @@ export type PluginCommand =
   | { type: "" }
   | { type: "帮助" }
   | { type: "列表" }
-  // 群组设置
-  | { type: "群组设置"; attributeSetters: AttributeSetters };
+  // 领域设置
+  | { type: "领域设置"; attributeSetters: AttributeSetters };
 
 export type DeckExistenceCommand =
   | {

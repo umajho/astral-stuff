@@ -31,3 +31,20 @@ export function trimSpacesExceptNewLines(text: string): string {
   }
   return text.slice(i, j + 1);
 }
+
+// see: https://stackoverflow.com/a/7228322
+export function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
+ * see: https://stackoverflow.com/a/12646864
+ *
+ * TODO!!: 这个在 “轮盘赌” 那边也有，应该建一个共用的包来存放这类常用工具函数。
+ */
+export function shuffle<T>(arr: T[]) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}

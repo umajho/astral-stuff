@@ -13,20 +13,18 @@ export function generateCommandPrefixEx(
   },
 ) {
   const rootPrefix = opts.rootPrefix ?? "";
-  const deckName = opts.deckName.deckName;
-  const handOwnerID = opts.handOwner?.userID;
   switch (prefixType) {
     case "global":
       return `${rootPrefix}`;
     case "deck":
-      return `${rootPrefix}：${deckName} `;
+      return `${rootPrefix}：${opts.deckName} `;
     case "deck_discard_pile":
-      return `${rootPrefix}：${deckName} 弃牌堆`;
+      return `${rootPrefix}：${opts.deckName} 弃牌堆`;
     case "deck_hand":
-      if (handOwnerID) {
-        return `${rootPrefix}：${deckName} 手牌：${handOwnerID} `;
+      if (opts.handOwner) {
+        return `${rootPrefix}：${opts.deckName} 手牌：${opts.handOwner} `;
       } else {
-        return `${rootPrefix}：${deckName} 手牌`;
+        return `${rootPrefix}：${opts.deckName} 手牌`;
       }
     default:
       exhaustive(prefixType);

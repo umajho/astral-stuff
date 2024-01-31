@@ -18,7 +18,7 @@ export class DeckExistenceCommandExecutor {
     senderID: UserID,
     cmd: DeckExistenceCommand & { type: "创建" },
   ): ExecutionResult {
-    if (deckName.deckName[0] === ".") {
+    if (("" + deckName)[0] === ".") {
       return ["todo", "实现个人卡组"];
     }
 
@@ -45,7 +45,7 @@ export class DeckExistenceCommandExecutor {
     return [
       "ok",
       [
-        `成功创建卡组 “${deckName.deckName}”：`,
+        `成功创建卡组 “${deckName}”：`,
         "",
         deck.generateSummaryText(),
       ].join("\n"),
@@ -69,7 +69,7 @@ export class DeckExistenceCommandExecutor {
 
   execute销毁(_cmd: DeckExistenceCommand & { type: "销毁" }): ExecutionResult {
     if (
-      this.senderID.userID !== this.deck.mainOwner.userID &&
+      !this.senderID.equals(this.deck.mainOwner) &&
       !this.scope.isAdmin(this.senderID)
     ) {
       return [

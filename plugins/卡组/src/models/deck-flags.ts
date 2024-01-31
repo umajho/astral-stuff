@@ -2,7 +2,7 @@ import { DeckName } from "../ids.ts";
 
 const PUT_BACK_MODES = ["放回", "不放回", "放回不重复", "放回不独立"] as const;
 export type PutBackMode = (typeof PUT_BACK_MODES)[number];
-const DISCARD_FLAGS = ["弃牌区" /*TODO!!: , "手牌" */] as const;
+const DISCARD_FLAGS = ["弃牌堆" /*TODO!!: , "手牌" */] as const;
 export type DiscardFlag = (typeof DISCARD_FLAGS)[number];
 export type DiscardFlags = { [Name in DiscardFlag]?: boolean };
 const DECK_FLAG_NAMES = [
@@ -57,15 +57,15 @@ export function updateDeckFlags(
     return ["error", `必须要启用一个放回相关的旗帜（${modes}）有效`];
   }
   const finalPutBackMode = newPutBackMode ?? oldPutBackMode;
-  if (finalPutBackMode === "不放回" && !("弃牌区" in newDiscardFlags)) {
-    // 如果没有明确不启用弃牌区，那么弃牌区默认开启。
-    newDiscardFlags["弃牌区"] = true;
+  if (finalPutBackMode === "不放回" && !("弃牌堆" in newDiscardFlags)) {
+    // 如果没有明确不启用弃牌堆，那么弃牌堆默认开启。
+    newDiscardFlags["弃牌堆"] = true;
   }
 
   const finalFlags: FlagName[] = [finalPutBackMode];
   if (finalPutBackMode === "不放回") {
-    if (newDiscardFlags["弃牌区"] ?? oldDiscardFlags["弃牌区"]) {
-      finalFlags.push("弃牌区");
+    if (newDiscardFlags["弃牌堆"] ?? oldDiscardFlags["弃牌堆"]) {
+      finalFlags.push("弃牌堆");
     }
   } else {
     for (const name of DISCARD_FLAGS) {
@@ -121,8 +121,8 @@ export function generateDeckFlagsText(
     }
     const description = (() => {
       if (putBackMode === "不放回") {
-        if (discardFlags.弃牌区) {
-          return "抽到的卡放入弃牌区。";
+        if (discardFlags.弃牌堆) {
+          return "抽到的卡放入弃牌堆。";
         } else {
           return "抽到的卡直接删除。";
         }
@@ -136,7 +136,7 @@ export function generateDeckFlagsText(
   {
     if (flags.indexOf("领域默认") >= 0) {
       const usage =
-        `形如 “卡组：${opts.deckName.deckName} 抽卡” 的命令形式可以简化为 “：抽卡”`;
+        `形如 “卡组：${opts.deckName} 抽卡” 的命令形式可以简化为 “：抽卡”`;
       texts.push([
         "+领域默认",
         `本套卡组是本领域的默认卡组，${usage}。`,
@@ -164,8 +164,8 @@ export function extractPutBackMode(flags: FlagName[]): PutBackMode {
 // TODO!: 值的类型不应该含 “undefined”。
 export function extractDiscardFlags(flags: FlagName[]): DiscardFlags {
   const discardFlags: DiscardFlags = {};
-  if (flags.indexOf("弃牌区") >= 0) {
-    discardFlags["弃牌区"] = true;
+  if (flags.indexOf("弃牌堆") >= 0) {
+    discardFlags["弃牌堆"] = true;
   }
   return discardFlags;
 }

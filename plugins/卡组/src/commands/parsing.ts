@@ -730,7 +730,7 @@ export function parseNewCards(text: string):
       case "$name|$open":
         if (!cards.length) return "起始位置后";
         const name = cards[cards.length - 1].name;
-        return `第 ${cards.length} 张卡牌 “${name.cardName}” 之后`;
+        return `第 ${cards.length} 张卡牌 “${name}” 之后`;
       default:
         return `解析第 ${cards.length + 1} 张卡牌 “${state[2]}” 途中`;
     }

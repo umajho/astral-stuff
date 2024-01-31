@@ -39,20 +39,20 @@ export class Card {
       : this.description;
     description = description.replace(/\n/g, "<换行>");
     return (opts?.amount !== undefined ? `${opts.amount}#` : "") +
-      `${this.name.cardName}：${description}`;
+      `${this.name}：${description}`;
   }
 
   generateFullText(): string {
     const isMultiLines = this.description.indexOf("\n") >= 0;
     return [
-      "添加者：" + this.providerID.userID,
-      `${this.name.cardName}「${isMultiLines ? "\n" : ""}${this.description}」`,
+      "添加者：" + this.providerID,
+      `${this.name}「${isMultiLines ? "\n" : ""}${this.description}」`,
     ].join("\n");
   }
 }
 
 export interface DeckData {
-  mainOwner: UserID;
+  mainOwner: string;
   attributes: {}; //TODO!!: { [Name in DeckAttributeName]?: string | null };
   flags: Exclude<FlagName, "领域默认">[];
   cards: {
@@ -72,7 +72,7 @@ export interface DeckData {
 
 export function makeNewDeckData(mainOwner: UserID): DeckData {
   return {
-    mainOwner,
+    mainOwner: mainOwner.userID,
     attributes: {},
     flags: ["放回"],
     cards: {},
@@ -99,7 +99,7 @@ export class Deck {
   }
 
   get mainOwner(): UserID {
-    return this.data.mainOwner;
+    return new UserID(this.data.mainOwner);
   }
 
   get totalCardKinds(): number {
@@ -116,8 +116,8 @@ export class Deck {
 
   generateSummaryText(): string {
     return [
-      `= 卡组 “${this.name.deckName}” =`,
-      "主拥有者：" + this.mainOwner.userID,
+      `= 卡组 “${this.name}” =`,
+      "主拥有者：" + this.mainOwner,
       "卡牌种类数：" + this.totalCardKinds,
       "卡牌总数：" + this.totalCards,
       "",
@@ -138,7 +138,7 @@ export class Deck {
   }
 
   get flag领域默认(): boolean {
-    return this.scope.attr默认卡组?.deckName === this.name.deckName;
+    return this.scope.attr默认卡组?.equals(this.name) ?? false;
   }
 
   get fullFlags(): FlagName[] {
@@ -159,7 +159,7 @@ export class Deck {
     const flags = result[1];
     if (flags.indexOf("领域默认") >= 0) {
       this.scope //
-        .setAttributeTextInternal("默认卡组", this.name.deckName, senderID);
+        .setAttributeTextInternal("默认卡组", "" + this.name, senderID);
     }
     this.data.flags = //
       flags.filter((f) => f !== "领域默认") as typeof this.data.flags;
@@ -189,17 +189,17 @@ export class Deck {
       return [
         "error",
         `若将指定的新卡（${totalOldCards} 张）添加至卡组，` +
-        `卡组 “${this.name.deckName}” 中卡牌的数目将从 ${totalOldCards} 上升至 ${totalCards}，` +
+        `卡组 “${this.name}” 中卡牌的数目将从 ${totalOldCards} 上升至 ${totalCards}，` +
         `超过领域 “${this.scope.name}” 所允许的上限 ${allowedCards} 张`,
       ];
     }
 
     for (const card of cards) {
-      const cardInData = this.data.cards[card.name.cardName];
+      const cardInData = this.data.cards["" + card.name];
       if (card.description && cardInData) {
         return [
           "error",
-          `名为 “${card.name.cardName}” 的卡牌已经存在于卡组中。` +
+          `名为 “${card.name}” 的卡牌已经存在于卡组中。` +
           "若要增加其数量，请以空描述的形式添加该卡牌；" +
           "若要修改其描述，请先从卡组中删除掉所有这个名字的卡牌",
         ];
@@ -207,10 +207,10 @@ export class Deck {
       if (cardInData) {
         cardInData.referenceCount += card.amount ?? 1;
       } else {
-        this.data.cards[card.name.cardName] = {
+        this.data.cards["" + card.name] = {
           referenceCount: card.amount ?? 1,
           description: card.description,
-          providerID: sender.userID,
+          providerID: "" + sender,
         };
       }
     }
@@ -218,7 +218,7 @@ export class Deck {
     const flatCards: string[] = [];
     for (const card of cards) {
       for (let i = 0; i < (card.amount ?? 1); i++) {
-        flatCards.push(card.name.cardName);
+        flatCards.push("" + card.name);
       }
     }
 
@@ -247,7 +247,7 @@ export class Deck {
   }
 
   getCard(name: CardName): Card | null {
-    const card = this.data.cards[name.cardName];
+    const card = this.data.cards["" + name];
     if (!card) return null;
     return new Card(name, card.description, new UserID(card.providerID));
   }
@@ -285,17 +285,17 @@ export class Deck {
     senderID: UserID,
   ): ["ok"] | ["error", string] {
     for (const card of cards) {
-      const name = card.name.cardName;
+      const name = "" + card.name;
       const cardInData = this.data.cards[name];
       if (!cardInData) {
         return [
           "error",
-          `卡组 “${this.name.deckName}” 不存在名为 “${name}” 的卡牌`,
+          `卡组 “${this.name}” 不存在名为 “${name}” 的卡牌`,
         ];
       }
       if (
-        cardInData.providerID !== senderID.userID &&
-        this.mainOwner.userID !== senderID.userID &&
+        cardInData.providerID !== "" + senderID &&
+        !this.mainOwner.equals(senderID) &&
         !this.scope.isAdmin(senderID)
       ) { // TODO!: 记得在实现了 “通过卡组属性指定的拥有者” 后加上对应的判断条件。
         return [
@@ -467,7 +467,7 @@ export class Deck {
 
     const discardFlags = this.discardFlags;
     if (putBackMode === "不放回") {
-      if (discardFlags.弃牌区) {
+      if (discardFlags.弃牌堆) {
         this.data.discardPile.push(...cards);
       } else {
         for (const name of cards) {

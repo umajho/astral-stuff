@@ -2,17 +2,18 @@ import "astral-dice-types";
 
 import packageJSON from "../package.json" assert { type: "json" };
 
-import { parseCommand } from "./commands/parsing.ts";
+import { parseCommand, parseDeckCommand } from "./commands/parsing.ts";
 import { Scope, Scopes } from "./models/scopes.ts";
 import { DeckName, GroupID, UserID } from "./ids.ts";
 import { astralRepo } from "./repo.ts";
-import { PLUGIN_NAME } from "./consts.ts";
+import { PLUGIN_NAME, ROOT_PREFIX } from "./consts.ts";
 import { exhaustive } from "./ts-utils.ts";
 import { PluginCommandExecutor } from "./executors/plugin.ts";
 import { DeckExistenceCommandExecutor } from "./executors/deck_existence.ts";
 import { Deck } from "./models/decks.ts";
 import { DeckCommandExecutor } from "./executors/deck.ts";
 import { DeckDiscardPileCommandExecutor } from "./executors/deck_discard_pile.ts";
+import { Command } from "./commands/mod.ts";
 
 declare const v1: string, v2: string, v3: string;
 
@@ -36,30 +37,52 @@ export type Saver =
   | { scopes: Scope[]; deleteDecks?: DeckName[] };
 
 function main(mainPrefix: MainPrefix, restText: string, senderID_: string) {
-  if (mainPrefix !== "卡组") throw new Error("unimplemented");
   const senderID = new UserID(senderID_);
 
-  const parseResult = parseCommand(restText, { rootPrefix: "卡组" });
-  if (parseResult[0] === "ignore") return;
-  if (parseResult[0] === "error") {
-    Lib.reply("错误：\n" + parseResult[1]);
-    return;
+  let cmd: Command;
+  let mainAdmins: UserID[];
+  let scope: Scope;
+  let parseResult: ReturnType<typeof parseCommand>;
+  if (mainPrefix === "卡组") {
+    parseResult = parseCommand(restText, { rootPrefix: ROOT_PREFIX });
+    if (parseResult[0] === "ignore") return;
+    if (parseResult[0] === "error") {
+      Lib.reply("错误：\n" + parseResult[1]);
+      return;
+    }
+    cmd = parseResult[1];
+
+    mainAdmins = getMainAdmins();
+    const scope_ = getScope({ mainAdmins });
+
+    if (cmd.type === "plugin" && cmd.payload.type === "") {
+      Lib.reply(generatePluginInfo({ mainAdmins, scope: scope_ }));
+      return;
+    }
+
+    if (scope_) {
+      scope = scope_;
+    } else {
+      return;
+    }
+  } else {
+    mainAdmins = getMainAdmins();
+    const scope_ = getScope({ mainAdmins });
+    if (!scope_) return;
+    scope = scope_;
+
+    const defaultDeckName = scope?.attr默认卡组;
+    if (!defaultDeckName) return;
+
+    parseResult = parseDeckCommand(restText, defaultDeckName, {
+      rootPrefix: ROOT_PREFIX,
+    });
+    if (parseResult[0] === "error") {
+      Lib.reply("错误：\n" + parseResult[1]);
+      return;
+    }
+    cmd = parseResult[1];
   }
-  const cmd = parseResult[1];
-
-  const mainAdmins = (JSON.parse("" + Lib.getConfig("main-admins")) as string[])
-    .map((a) => new UserID(String(a)));
-  const scopeData = JSON.parse("" + Lib.getConfig("scopes"));
-  const scopes = new Scopes(scopeData, mainAdmins);
-  const groupID = new GroupID("" + Lib.getGroup());
-  const scope = scopes.getScopeByGroup(astralRepo, groupID);
-
-  if (cmd.type === "plugin" && cmd.payload.type === "") {
-    Lib.reply(generatePluginInfo({ mainAdmins, scope }));
-    return;
-  }
-
-  if (!scope) return;
 
   let execResult: ExecutionResult;
   switch (cmd.type) {
@@ -169,7 +192,7 @@ function generatePluginInfo(opts: {
     `= ${PLUGIN_NAME}插件 =`,
     "版本：" + packageJSON.version,
     "主页：" + packageJSON.homepage,
-    "主管理员：" + opts.mainAdmins.map((a) => a.userID).join("、"),
+    "主管理员：" + opts.mainAdmins.map((a) => "" + a).join("、"),
     "",
     "通过 “卡组帮助” 获取插件用法。",
     "",
@@ -195,6 +218,18 @@ function generatePluginInfo(opts: {
   return lines.join("\n");
 }
 
+function getMainAdmins() {
+  return (JSON.parse("" + Lib.getConfig("main-admins")) as string[])
+    .map((a) => new UserID(String(a)));
+}
+
+function getScope(opts: { mainAdmins: UserID[] }) {
+  const scopeData = JSON.parse("" + Lib.getConfig("scopes"));
+  const scopes = new Scopes(scopeData, opts.mainAdmins);
+  const groupID = new GroupID("" + Lib.getGroup());
+  return scopes.getScopeByGroup(astralRepo, groupID);
+}
+
 function withDeck<T>(
   scope: Scope,
   deckName: DeckName,
@@ -210,7 +245,7 @@ function withDeck<T>(
   } else {
     return [
       "error",
-      `领域 “${scope.name.scopeID}” 当中不存在卡组 “${deckName.deckName}”`,
+      `领域 “${scope.name}” 当中不存在卡组 “${deckName}”`,
     ];
   }
 }

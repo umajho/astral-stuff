@@ -38,7 +38,7 @@ export class PluginCommandExecutor {
     return [
       "ok",
       `领域 “${this.scope.name}” 现有卡组（共 ${decks.length} 套）：\n` +
-      decks.map((d) => d.deckName).join("\n"),
+      decks.map((d) => "" + d).join("\n"),
       {},
     ];
   }

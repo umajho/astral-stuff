@@ -13,7 +13,7 @@ export interface Repo {
 }
 
 interface LibForRepo {
-  getConfig(key: string): String;
+  getValue(key: string): String;
   setAsSolidValue(key: string): void;
   setValue(key: string, value: string): void;
   setValueExpireTime(key: string, zero: 0): void;
@@ -23,11 +23,11 @@ export class LibRepo implements Repo {
   constructor(private lib: LibForRepo) {}
 
   getScopeKey(scopeID: ScopeID) {
-    return JSON.stringify(["scope", scopeID.scopeID]);
+    return JSON.stringify(["scope", "" + scopeID]);
   }
 
   getDeckKey(scopeID: ScopeID, deckName: DeckName) {
-    return JSON.stringify(["deck", scopeID.scopeID, deckName.deckName]);
+    return JSON.stringify(["deck", "" + scopeID, "" + deckName]);
   }
 
   loadScopeData(
@@ -35,12 +35,12 @@ export class LibRepo implements Repo {
   ): ["ok", ScopeData | null] | ["error", string] {
     let data: ScopeData | null;
     try {
-      const stuff = this.lib.getConfig(this.getScopeKey(scopeID));
+      const stuff = this.lib.getValue(this.getScopeKey(scopeID));
       data = ("" + stuff) ? JSON.parse("" + stuff) : null;
     } catch (e) {
       return [
         "error",
-        `读取领域 “${scopeID.scopeID}” 的数据失败` +
+        `读取领域 “${scopeID}” 的数据失败` +
         (e instanceof Error ? "：" + e.message : ""),
       ];
     }
@@ -59,12 +59,12 @@ export class LibRepo implements Repo {
   ): ["error", string] | ["ok", DeckData | null] {
     let data: DeckData | null;
     try {
-      const stuff = this.lib.getConfig(this.getDeckKey(scopeID, deckName));
+      const stuff = this.lib.getValue(this.getDeckKey(scopeID, deckName));
       data = ("" + stuff) ? JSON.parse("" + stuff) : null;
     } catch (e) {
       return [
         "error",
-        `读取领域 “${scopeID.scopeID}” 的卡组 “${deckName.deckName}” 的数据失败` +
+        `读取领域 “${scopeID}” 的卡组 “${deckName}” 的数据失败` +
         (e instanceof Error ? "：" + e.message : ""),
       ];
     }

@@ -2,7 +2,7 @@ import {
   CardNameWithDescriptionAndOptionalAmount,
   DeckCommand,
 } from "../commands/mod.ts";
-import { UserID } from "../ids.ts";
+import { CardName, UserID } from "../ids.ts";
 import { ExecutionResult } from "../mod.ts";
 import { Deck } from "../models/decks.ts";
 import { Scope } from "../models/scopes.ts";
@@ -50,7 +50,7 @@ export class DeckCommandExecutor {
     const cards = this.deck.getSortedCardsWithAmount();
     const statis =
       `共 ${this.deck.totalCardKinds} 种、${this.deck.totalCards} 张`;
-    const lines = [`卡组 “${this.deck.name.deckName}” 现有卡牌（${statis}）`];
+    const lines = [`卡组 “${this.deck.name}” 现有卡牌（${statis}）`];
     for (const [card, amount] of cards) {
       lines.push(card.generateShortText({ amount }));
     }
@@ -81,7 +81,7 @@ export class DeckCommandExecutor {
     return [
       "ok",
       [
-        `成功更新卡组 “${this.deck.name.deckName}” 设置：`,
+        `成功更新卡组 “${this.deck.name}” 设置：`,
         "",
         this.deck.generateSummaryText(),
       ].join("\n"),
@@ -134,7 +134,7 @@ export class DeckCommandExecutor {
 }
 
 function summarizeCards(cards: CardNameWithDescriptionAndOptionalAmount[]) {
-  const cardSet: [string, number][] = [];
+  const cardSet: [CardName, number][] = [];
   let total = 0;
   OUTER:
   for (const card of cards) {
@@ -142,12 +142,12 @@ function summarizeCards(cards: CardNameWithDescriptionAndOptionalAmount[]) {
     total += amount;
     for (const i in cardSet) {
       const [seenName, seenN] = cardSet[i];
-      if (seenName === card.name.cardName) {
+      if (seenName.equals(card.name)) {
         cardSet[i] = [seenName, seenN + amount];
         continue OUTER;
       }
     }
-    cardSet.push([card.name.cardName, amount]);
+    cardSet.push([card.name, amount]);
   }
 
   const shownCards = cardSet.slice(0, 5).map(([name, n]) => `“${n}#${name}”`)

@@ -99,11 +99,11 @@ export class Scope {
 
   isAdmin(id: UserID): boolean {
     if (this.isMainAdmin(id)) return true;
-    return this.attr管理员.some((u) => u.userID === id.userID);
+    return this.attr管理员.some((u) => u.equals(id));
   }
 
   isMainAdmin(id: UserID): boolean {
-    return this.mainAdmins.some((u) => u.userID === id.userID);
+    return this.mainAdmins.some((u) => u.equals(id));
   }
 
   get decks(): DeckName[] {
@@ -111,18 +111,18 @@ export class Scope {
   }
 
   declareDeck(name: DeckName): ["ok"] | ["error", string] {
-    if (/\s/.test(name.deckName)) return ["error", "卡组名中不能含有空白"];
-    if (this.data.decks.some((d) => d === name.deckName)) {
-      return ["error", `名为 “${name.deckName}” 的卡组已经存在`];
+    if (/\s/.test("" + name)) return ["error", "卡组名中不能含有空白"];
+    if (this.data.decks.some((d) => d === "" + name)) {
+      return ["error", `名为 “${name}” 的卡组已经存在`];
     }
-    this.data.decks.push(name.deckName);
+    this.data.decks.push("" + name);
     this.data.decks.sort();
     return ["ok"];
   }
   revokeDeck(name: DeckName): ["ok"] | ["error", string] {
-    const idx = this.data.decks.indexOf(name.deckName);
+    const idx = this.data.decks.indexOf("" + name);
     if (idx < 0) {
-      return ["error", `不存在名为 “${name.deckName}” 的卡组`];
+      return ["error", `不存在名为 “${name}” 的卡组`];
     }
     this.data.decks.splice(idx, 1);
     return ["ok"];
@@ -148,7 +148,7 @@ export class Scopes {
       const scopeID = new ScopeID(name);
       const groups = scopeGroupsData.map((g) => new GroupID(String(g)));
 
-      if (groups.some((g) => g.groupID === groupID.groupID)) {
+      if (groups.some((g) => g.equals(groupID))) {
         const result = repo.loadScopeData(scopeID);
         if (result[0] === "error") throw new Error(result[1]);
         const scopeData = result[1] ?? makeEmptyScopeData();

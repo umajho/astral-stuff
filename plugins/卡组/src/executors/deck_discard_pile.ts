@@ -31,13 +31,13 @@ export class DeckDiscardPileCommandExecutor {
     const cards = this.deck.getCardsInDiscardPile();
     const uniqueNames: string[] = [];
     for (const card of cards) {
-      if (uniqueNames.indexOf(card.name.cardName) < 0) {
-        uniqueNames.push(card.name.cardName);
+      if (uniqueNames.indexOf("" + card.name) < 0) {
+        uniqueNames.push("" + card.name);
       }
     }
     const statis = `共 ${uniqueNames.length} 种、${cards.length} 张`;
     const lines = [
-      `卡组 “${this.deck.name.deckName}” 弃牌堆现有卡牌（${statis}）`,
+      `卡组 “${this.deck.name}” 弃牌堆现有卡牌（${statis}）`,
     ];
     for (const card of cards) {
       lines.push(card.generateShortText());

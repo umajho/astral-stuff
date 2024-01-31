@@ -43,7 +43,7 @@ export class DeckCommandExecutor {
   }
 
   executeEmpty(_cmd: DeckCommand & { type: "" }): ExecutionResult {
-    return ["ok", this.deck.generateSummaryText(), {}];
+    return ["ok", this.deck.generateSummaryText(), null];
   }
 
   execute列表(_cmd: DeckCommand & { type: "列表" }): ExecutionResult {
@@ -54,7 +54,7 @@ export class DeckCommandExecutor {
     for (const [card, amount] of cards) {
       lines.push(card.generateShortText({ amount }));
     }
-    return ["ok", lines.join("\n"), {}];
+    return ["ok", lines.join("\n"), null];
   }
 
   execute查看(cmd: DeckCommand & { type: "查看" }): ExecutionResult {
@@ -67,7 +67,7 @@ export class DeckCommandExecutor {
       }
       texts.push(card.generateFullText());
     }
-    return ["ok", texts.join("\n\n---\n"), {}];
+    return ["ok", texts.join("\n\n---\n"), null];
   }
 
   execute设置(cmd: DeckCommand & { type: "设置" }): ExecutionResult {
@@ -96,7 +96,7 @@ export class DeckCommandExecutor {
     // TODO: 也许统计信息应该由 `addCards` 返回。
     let msg = `成功添加 ${summarizeCards(cmd.cards)}。`;
 
-    return ["ok", msg, { scopes: null, decks: this.deck }];
+    return ["ok", msg, { scopes: null, decks: [this.deck] }];
   }
 
   execute删除(cmd: DeckCommand & { type: "删除" }): ExecutionResult {
@@ -104,13 +104,13 @@ export class DeckCommandExecutor {
     if (deleteResult[0] === "error") return deleteResult;
 
     // TODO!!: 应该像 `execute添加` 一样包含统计信息。
-    return ["ok", "成功删除卡牌。", { scopes: null, decks: this.deck }];
+    return ["ok", "成功删除卡牌。", { scopes: null, decks: [this.deck] }];
   }
 
   execute洗牌(_cmd: DeckCommand & { type: "洗牌" }): ExecutionResult {
     const result = this.deck.shuffle();
     if (result[0] !== "ok") return ["error", "? shuffle in execute洗牌"];
-    return ["ok", "已完成洗牌。", { scopes: [this.scope], decks: this.deck }];
+    return ["ok", "已完成洗牌。", { scopes: [this.scope], decks: [this.deck] }];
   }
 
   execute回收全部并洗牌(

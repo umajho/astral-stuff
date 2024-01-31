@@ -42,7 +42,7 @@ export class DeckDiscardPileCommandExecutor {
     for (const card of cards) {
       lines.push(card.generateShortText());
     }
-    return ["ok", lines.join("\n"), {}];
+    return ["ok", lines.join("\n"), null];
   }
 
   execute回收(cmd: DeckDiscardPileCommand & { type: "回收" }): ExecutionResult {

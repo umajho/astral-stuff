@@ -30,11 +30,11 @@ export type ExecutionResult =
   | ["todo", string?];
 // TODO: 放到更合适的地方去。
 export type Saver =
-  | {}
+  | null
   | { scopes: Scope[] }
   | { scopes: Scope[]; decks: Deck[] }
   | { scopes: null; decks: Deck[] }
-  | { scopes: Scope[]; deleteDecks?: DeckName[] };
+  | { scopes: Scope[]; deleteDecks: DeckName[] };
 
 function main(mainPrefix: MainPrefix, restText: string, senderID_: string) {
   const senderID = new UserID(senderID_);
@@ -152,16 +152,18 @@ function main(mainPrefix: MainPrefix, restText: string, senderID_: string) {
   switch (execResult[0]) {
     case "ok": {
       const saver = execResult[2];
-      for (const deck of ("decks" in saver && saver.decks) || []) {
-        astralRepo.saveDeckData(deck);
-      }
-      for (
-        const deckName of ("deleteDecks" in saver && saver.deleteDecks) || []
-      ) {
-        astralRepo.deleteDeck(deckName, scope.name);
-      }
-      for (const scope of ("scopes" in saver && saver.scopes) || []) {
-        astralRepo.saveScopeData(scope);
+      if (saver) {
+        for (const deck of ("decks" in saver && saver.decks) || []) {
+          astralRepo.saveDeckData(deck);
+        }
+        for (
+          const deckName of ("deleteDecks" in saver && saver.deleteDecks) || []
+        ) {
+          astralRepo.deleteDeck(deckName, scope.name);
+        }
+        for (const scope of ("scopes" in saver && saver.scopes) || []) {
+          astralRepo.saveScopeData(scope);
+        }
       }
       Lib.reply(execResult[1]);
       break;

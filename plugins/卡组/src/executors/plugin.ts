@@ -30,7 +30,7 @@ export class PluginCommandExecutor {
     const usage = generateUsage(this.opts.usageURL, {
       rootPrefix: ROOT_PREFIX,
     });
-    return ["ok", usage, {}];
+    return ["ok", usage, null];
   }
 
   private execute列表(_cmd: PluginCommand & { type: "列表" }): ExecutionResult {
@@ -39,7 +39,7 @@ export class PluginCommandExecutor {
       "ok",
       `领域 “${this.scope.name}” 现有卡组（共 ${decks.length} 套）：\n` +
       decks.map((d) => "" + d).join("\n"),
-      {},
+      null,
     ];
   }
 

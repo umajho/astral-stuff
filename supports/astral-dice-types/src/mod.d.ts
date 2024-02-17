@@ -18,15 +18,15 @@ interface AstralDiceAPI {
   /**
    * 持久化 `key` 对应的变量。
    */
-  setAsSolidValue(key: string);
+  setAsSolidValue(key: string): void;
   /**
    * 设置变量。
    */
-  setValue(key: string, value: string);
+  setValue(key: string, value: string): void;
   /**
    * 目前只能确定把第二个参数设为 “0” 能删除掉变量。
    */
-  setValueExpireTime(key: string, zero: 0);
+  setValueExpireTime(key: string, zero: 0): void;
   /**
    * 获取配置（同一 `auto` 下名为 key 的属性）。
    */

@@ -1,6 +1,6 @@
 import { DeckDiscardPileCommand } from "../commands/mod.ts";
 import { UserID } from "../ids.ts";
-import { ExecutionResult } from "../mod.ts";
+import { ExecutionResult } from "../main-executor.ts";
 import { Deck } from "../models/decks.ts";
 import { Scope } from "../models/scopes.ts";
 import { exhaustive } from "../ts-utils.ts";

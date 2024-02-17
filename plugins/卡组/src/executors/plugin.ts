@@ -1,4 +1,4 @@
-import { ExecutionResult } from "../mod.ts";
+import { ExecutionResult } from "../main-executor.ts";
 import { PluginCommand } from "../commands/mod.ts";
 import { Scope } from "../models/scopes.ts";
 import { generateUsage } from "../usage.ts";

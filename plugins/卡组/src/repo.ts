@@ -10,17 +10,11 @@ export interface Repo {
     deckName: DeckName,
   ): ["ok", DeckData | null] | ["error", string];
   saveDeckData(deck: Deck): void;
+  deleteDeck(deckName: DeckName, scopeID: ScopeID): void;
 }
 
-interface LibForRepo {
-  getValue(key: string): String;
-  setAsSolidValue(key: string): void;
-  setValue(key: string, value: string): void;
-  setValueExpireTime(key: string, zero: 0): void;
-}
-
-export class LibRepo implements Repo {
-  constructor(private lib: LibForRepo) {}
+export class AstralRepo implements Repo {
+  constructor(private lib: AstralDiceAPI) {}
 
   getScopeKey(scopeID: ScopeID) {
     return JSON.stringify(["scope", "" + scopeID]);
@@ -83,5 +77,3 @@ export class LibRepo implements Repo {
     this.lib.setValueExpireTime(key, 0);
   }
 }
-
-export const astralRepo = new LibRepo(Lib);

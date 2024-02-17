@@ -14,7 +14,7 @@ type Texts = typeof defaultTexts;
 
 const TEXTS: Texts = (() => {
   try {
-    return JSON.parse(Lib.getConfig("texts"));
+    return JSON.parse("" + Lib.getConfig("texts"));
   } catch {
     return defaultTexts;
   }

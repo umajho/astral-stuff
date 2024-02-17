@@ -31,7 +31,7 @@ function processArgument(game: Game, arg: string, sender: string): string {
 }
 
 function loadState(storeID: string): State | null {
-  const data = Lib.getValue(storeID);
+  const data = "" + Lib.getValue(storeID);
   try {
     return JSON.parse(data);
   } catch {

@@ -10,7 +10,7 @@ interface AstralDiceAPI {
   /**
    * 回复。
    */
-  reply(msg: string): string;
+  reply(msg: string): void;
   /**
    * 获取变量。
    */

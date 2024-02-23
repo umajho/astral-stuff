@@ -1,15 +1,10 @@
-// FIXME: ts-node 不知为何不识别 `.ts` 扩展名，就先用 deno 凑合了。为此
-// `tsconfig.json` 也设置了 `"allowImportingTsExtensions": true` 和
-// `"noEmit": true`，否则没原封不动的 `.ts` 扩展名 deno 就引入不了模块。创建
-// `deno.d.ts` 也只是为了让 vscode 能识别 npm 包的类型，这也让 deno 用到的 npm
-// 包也要在 node 那边作为依赖，从而重复下载两次。另，先前长期未更新的 snabbdom
-// 还恰巧在前几天更新了新版本（`3.6.0`），新引入的 bug 让 deno 用不了，所以 deno
-// 这边在用版本 `3.5.1`。
+// XXX: 先前长期未更新的 snabbdom 还恰巧在前几天更新了新版本（`3.6.0`），新引入
+// 的 bug 让其无法适用于目前的构建步骤，所以版本固定到了 `3.5.1`。
 
 import packageJSON from "../package.json" assert { type: "json" };
 
-import { h, VNode, VNodeChildren } from "npm:snabbdom@3.5.1";
-import toHTML from "npm:snabbdom-to-html@7.1.0";
+import { h, VNode, VNodeChildren } from "snabbdom";
+import toHTML from "snabbdom-to-html";
 
 import { intersperse } from "../src/js-utils.ts";
 

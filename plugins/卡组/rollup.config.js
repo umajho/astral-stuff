@@ -11,13 +11,16 @@ import terser from "@rollup/plugin-terser";
 
 import rollupPluginAstralDice from "rollup-plugin-astral-dice";
 
+import * as coreConfigs from "./core-configs.js";
+
 const auto = await (async () => {
-  const file = await fs.readFile("auto.yaml");
-  const auto = YAML.parse(file.toString());
+  const configs = await import("./configs.template.js");
   return {
+    keywordRegexp: coreConfigs.keywordRegexp.source,
+    program: coreConfigs.program,
     ...(packageJSON.version ? { version: packageJSON.version } : {}),
     ...(packageJSON.homepage ? { homepage: packageJSON.homepage } : {}),
-    ...auto,
+    ...configs,
   };
 })();
 

@@ -1,5 +1,3 @@
-import "astral-dice-types";
-
 import { Game, State } from "./game.js";
 import TEXTS from "./texts.js";
 

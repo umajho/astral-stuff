@@ -1,3 +1,5 @@
+import { AstralDiceAPI } from "astral-dice-types";
+
 import { DeckName, ScopeID } from "./ids.ts";
 import { Deck, DeckData } from "./models/decks.ts";
 import { Scope, ScopeData } from "./models/scopes.ts";

@@ -1,5 +1,3 @@
-import "astral-dice-types";
-
 import packageJSON from "../package.json" assert { type: "json" };
 
 import { PLUGIN_NAME } from "./consts.ts";

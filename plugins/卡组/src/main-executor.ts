@@ -1,3 +1,5 @@
+import { AstralDiceAPI } from "astral-dice-types";
+
 import { Command, parseCommand, parseDeckCommand } from "./commands/mod.ts";
 import { PLUGIN_NAME, ROOT_PREFIX } from "./consts.ts";
 import { DeckCommandExecutor } from "./executors/deck.ts";

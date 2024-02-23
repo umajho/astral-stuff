@@ -1,0 +1,10 @@
+{
+  "name": "astral-dice-lib-mock",
+  "main": "src/mod.ts",
+  "type": "module",
+  "author": "Umaĵo",
+  "license": "MIT",
+  "devDependencies": {
+    "astral-dice-types": "workspace:*"
+  }
+}

@@ -1,4 +1,4 @@
-interface AstralDiceAPI {
+export interface AstralDiceAPI {
   /**
    * 返回是否为群聊。
    */
@@ -32,5 +32,3 @@ interface AstralDiceAPI {
    */
   getConfig(key: string): String;
 }
-
-declare const Lib: AstralDiceAPI;

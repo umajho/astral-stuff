@@ -158,8 +158,9 @@ export class Deck {
 
     const flags = result[1];
     if (flags.indexOf("领域默认") >= 0) {
-      this.scope //
+      const result = this.scope //
         .setAttributeTextInternal("默认卡组", "" + this.name, senderID);
+      if (result[0] === "error") return result;
     }
     this.data.flags = //
       flags.filter((f) => f !== "领域默认") as typeof this.data.flags;

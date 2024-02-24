@@ -64,7 +64,7 @@ export type Command =
 export type PluginCommand =
   // 信息
   | { type: "概览" }
-  | { type: "帮助" }
+  | { type: "帮助"; filters: string[] | null }
   | { type: "列表" }
   // 领域设置
   | { type: "领域设置"; attributeSetters: AttributeSetters };

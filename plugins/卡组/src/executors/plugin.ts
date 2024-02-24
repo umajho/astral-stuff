@@ -26,10 +26,15 @@ export class PluginCommandExecutor {
     }
   }
 
-  private execute帮助(_cmd: PluginCommand & { type: "帮助" }): ExecutionResult {
+  private execute帮助(cmd: PluginCommand & { type: "帮助" }): ExecutionResult {
+    const filters = cmd.filters && [...cmd.filters];
     const usage = generateUsage(this.opts.usageURL, {
       rootPrefix: ROOT_PREFIX,
+      filtersMut: filters,
     });
+    if (filters?.length) {
+      return ["error", "未知帮助条目：\n" + filters.join("\n")];
+    }
     return ["ok", usage, null];
   }
 

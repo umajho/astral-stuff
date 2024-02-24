@@ -88,6 +88,9 @@ function tryParsePluginCommand(
       return errorShouldNotHaveArguments(TYPE, "概览");
 
     case "帮助":
+      if (!rest) return ["ok", { type: "帮助", filters: null }];
+      return ["ok", { type: "帮助", filters: rest.split(/\s+/) }];
+
     case "列表":
       if (!rest) return ["ok", { type: cmd }];
       return errorShouldNotHaveArguments(TYPE, cmd);

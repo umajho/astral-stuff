@@ -20,7 +20,22 @@ const COMMAND_CASES = {
       },
     },
     "帮助": {
-      examples: {},
+      examples: {
+        "": { type: "plugin", payload: { "type": "帮助", filters: null } },
+        "卡组存在::创建": {
+          type: "plugin",
+          payload: { "type": "帮助", filters: ["卡组存在::创建"] },
+        },
+      },
+      additionalExamples: {
+        "卡组存在::创建  卡组::添加": ["ok", {
+          type: "plugin",
+          payload: {
+            "type": "帮助",
+            filters: ["卡组存在::创建", "卡组::添加"],
+          },
+        }],
+      },
     },
     "列表": {
       examples: {},

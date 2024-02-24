@@ -67,6 +67,7 @@ export const COMMAND_USAGES = {
         ].join("\n"),
       },
       "帮助": {
+        argumentsFormat: "<命令名>*",
         description: "显示于本插件有关的帮助信息。",
       },
       "列表": {
@@ -279,7 +280,7 @@ export const COMMAND_USAGES = {
 export const COMMAND_EXAMPLES = {
   plugin: {
     "概览": [],
-    "帮助": [],
+    "帮助": ["", "卡组存在::创建"],
     "列表": [],
     "领域设置": ["\n默认卡组 塔罗牌"],
   },

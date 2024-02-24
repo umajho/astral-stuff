@@ -8,7 +8,7 @@ import {
 
 export function generateUsage(
   url: string | null,
-  opts: { rootPrefix: string },
+  opts: { rootPrefix: string; filtersMut: string[] | null },
 ): string {
   return [
     "= 用法 =",
@@ -20,17 +20,22 @@ export function generateUsage(
   ].join("\n");
 }
 
-function generateCommandsSectionOfUsage(opts: { rootPrefix: string }): string {
+function generateCommandsSectionOfUsage(
+  opts: { rootPrefix: string; filtersMut: string[] | null },
+): string {
   const lines = [];
   for (const typ_ in COMMAND_USAGES) {
     const typ = typ_ as CommandType;
     const cmds = COMMAND_USAGES[typ];
-    lines.push(...[
-      // `=== 类型「${localizeCommandType(typ)}」===`,
-      // "",
-      generateCommandUsagesOfType(typ, cmds, opts),
-      "",
-    ]);
+    const cmdUsagesOfType = generateCommandUsagesOfType(typ, cmds, opts);
+    if (cmdUsagesOfType) {
+      lines.push(...[
+        // `=== 类型「${localizeCommandType(typ)}」===`,
+        // "",
+        cmdUsagesOfType,
+        "",
+      ]);
+    }
   }
   lines.splice(lines.length - 1, 1);
 
@@ -40,13 +45,20 @@ function generateCommandsSectionOfUsage(opts: { rootPrefix: string }): string {
 function generateCommandUsagesOfType(
   typ: CommandType,
   cmds: { [name: string]: CommandUsage },
-  opts: { rootPrefix: string },
+  opts: { rootPrefix: string; filtersMut: string[] | null },
 ): string {
   const lines = [];
   for (const name in cmds) {
+    const fullName = `${localizeCommandType(typ)}::${name}`;
+    if (opts.filtersMut) {
+      const idxFullNameInfiltersMut = opts.filtersMut.indexOf(fullName);
+      if (idxFullNameInfiltersMut < 0) continue;
+      opts.filtersMut.splice(idxFullNameInfiltersMut, 1);
+    }
+
     const usage = cmds[name];
     lines.push(...[
-      `=== ${localizeCommandType(typ)}::${name} ===`,
+      `=== ${fullName} ===`,
       generateCommandUsage(typ, name, usage, opts),
       "",
     ]);

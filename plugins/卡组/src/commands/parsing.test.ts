@@ -564,12 +564,20 @@ const COMMAND_CASES = {
   [Type in CommandType]: {
     [Name in keyof (typeof COMMAND_USAGES)[Type]]: {
       // TODO: 更好的类型
+
+      // 遇到对应的后缀变体时，payload 应该打上什么样的补丁。
       suffixPayloadPatches?: { [suffix: string]: any };
+
+      // 存在于用法中的示例。
       examples: {
         // @ts-ignore 虽然报错，但是能给出补全…
         [Example in (typeof COMMAND_EXAMPLES)[Type][Name][number]]: Command;
       };
+
+      // 额外的示例。
       additionalExamples?: { [input: string]: ["ok", Command] | ["error"] };
+
+      // 额外的原生示例（作为测试输入时不会自动在开头添加命令前缀及变体后缀）。
       additionalRawExamples?: { [input: string]: ["ok", Command] | ["error"] };
     };
   };

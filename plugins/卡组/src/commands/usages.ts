@@ -7,6 +7,7 @@ import {
   DeckDiscardPileCommand,
   DeckExistenceCommand,
   DeckHandCommand,
+  localizeCommandType,
   PluginCommand,
 } from "./types.ts";
 
@@ -430,8 +431,10 @@ export function appendErrorMessageWithCommandUsage<
   // @ts-ignore
   const examples = COMMAND_EXAMPLES[cmdType][cmdName_] as string[];
   const cmdName = cmdName_ as string;
-  const usageText = generateCommandUsageText(cmdName, usage, examples, opts);
-  const msg = err[1] + "\n\n---\n" + usageText;
+  const cmdTypL10n = localizeCommandType(cmdType);
+  const usageText =
+    `发送 “${opts.rootPrefix}帮助 ${cmdTypL10n}::${cmdName}” 查询该命令的用法。`;
+  const msg = err[1] + `\n\n（${usageText}）`;
   return err.length === 3 ? ["error", msg, err[2]] : ["error", msg];
 }
 

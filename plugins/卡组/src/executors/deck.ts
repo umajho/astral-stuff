@@ -17,8 +17,8 @@ export class DeckCommandExecutor {
 
   execute(cmd: DeckCommand): ExecutionResult {
     switch (cmd.type) {
-      case "":
-        return this.executeEmpty(cmd);
+      case "概览":
+        return this.execute概览(cmd);
       case "列表":
         return this.execute列表(cmd);
       case "查看":
@@ -42,7 +42,7 @@ export class DeckCommandExecutor {
     }
   }
 
-  executeEmpty(_cmd: DeckCommand & { type: "" }): ExecutionResult {
+  execute概览(_cmd: DeckCommand & { type: "概览" }): ExecutionResult {
     return ["ok", this.deck.generateSummaryText(), null];
   }
 

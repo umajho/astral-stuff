@@ -63,7 +63,7 @@ export type Command =
 
 export type PluginCommand =
   // 信息
-  | { type: "" }
+  | { type: "概览" }
   | { type: "帮助" }
   | { type: "列表" }
   // 领域设置
@@ -83,7 +83,7 @@ export type DeckExistenceCommand =
 
 export type DeckCommand =
   // 信息
-  | { type: "" }
+  | { type: "概览" }
   | { type: "查看"; cards: CardName[] }
   // 设置
   | { type: "设置"; flagSetters: string[]; attributeSetters: AttributeSetters }

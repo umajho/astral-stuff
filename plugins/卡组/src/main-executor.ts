@@ -61,7 +61,7 @@ export class MainExecutor {
       mainAdmins = this.getMainAdmins();
       const scope_ = this.getScope({ mainAdmins });
 
-      if (cmd.type === "plugin" && cmd.payload.type === "") {
+      if (cmd.type === "plugin" && cmd.payload.type === "概览") {
         this.api.reply(this.generatePluginInfo({ mainAdmins, scope: scope_ }));
         return;
       }
@@ -93,7 +93,7 @@ export class MainExecutor {
     let execResult: ExecutionResult;
     switch (cmd.type) {
       case "plugin": {
-        if (cmd.payload.type === "") {
+        if (cmd.payload.type === "概览") {
           execResult = ["error", "unreachable"]; // “卡组” 是提前处理的命令。
           break;
         }

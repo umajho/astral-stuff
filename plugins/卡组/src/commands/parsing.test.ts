@@ -13,8 +13,11 @@ const DECIDE_LATER = Symbol("DECIDE_LATER");
 
 const COMMAND_CASES = {
   plugin: {
-    "": {
+    "概览": {
       examples: {},
+      additionalRawExamples: {
+        "": ["ok", { type: "plugin", payload: { type: "概览" } }],
+      },
     },
     "帮助": {
       examples: {},
@@ -32,7 +35,7 @@ const COMMAND_CASES = {
           },
         },
       },
-      additions: {
+      additionalExamples: {
         "INVALID\nFoo 42": ["error"],
         "": ["ok", {
           type: "plugin",
@@ -164,7 +167,7 @@ const COMMAND_CASES = {
           },
         },
       },
-      additions: {
+      additionalExamples: {
         "\n------\t  顺序  \t\n1「」": ["ok", {
           type: "deck_existence",
           deckName: TEST_DECK_NAME,
@@ -207,8 +210,15 @@ const COMMAND_CASES = {
     },
   },
   deck: {
-    "": {
+    "概览": {
       examples: {},
+      additionalRawExamples: {
+        [`：${TEST_DECK_NAME}`]: ["ok", {
+          type: "deck",
+          deckName: TEST_DECK_NAME,
+          payload: { type: "概览" },
+        }],
+      },
     },
     "列表": {
       examples: {},
@@ -559,7 +569,8 @@ const COMMAND_CASES = {
         // @ts-ignore 虽然报错，但是能给出补全…
         [Example in (typeof COMMAND_EXAMPLES)[Type][Name][number]]: Command;
       };
-      additions?: { [input: string]: ["ok", Command] | ["error"] };
+      additionalExamples?: { [input: string]: ["ok", Command] | ["error"] };
+      additionalRawExamples?: { [input: string]: ["ok", Command] | ["error"] };
     };
   };
 };
@@ -639,7 +650,8 @@ describe("各命令", () => {
     const cases: { // TODO: 应该有更可靠的方法决定类型。
       examples: { [example: string]: Command };
       suffixPayloadPatches?: { [suffix: string]: any };
-      additions?: { [input: string]: ["ok", Command] | ["error"] };
+      additionalExamples?: { [input: string]: ["ok", Command] | ["error"] };
+      additionalRawExamples?: { [input: string]: ["ok", Command] | ["error"] };
     } = COMMAND_CASES[typ][name];
 
     function makeExpected(raw: Command, suffix: string): Command {
@@ -665,29 +677,50 @@ describe("各命令", () => {
         }
       });
     }
-    if (!suffix && cases.additions) {
-      // 考虑到把各种后缀变体都测试一遍意义不大，就只测试无后缀的情况了。
-
-      describe("补充", () => {
-        for (
-          const [i, [example, rawExpected]] of Object.entries(cases.additions!)
-            .entries()
-        ) {
-          it(`case ${i + 1}: “${example}”`, () => {
-            const expected: typeof rawExpected = rawExpected[0] === "ok"
-              ? ["ok", makeExpected(rawExpected[1], "")]
-              : rawExpected;
-            const input = `${prefix}${variantName} ${example}`;
-            const parseOpts = { rootPrefix: TEST_ROOT_PREFIX };
-            const result = parseCommand(input, parseOpts);
-            if (expected[0] === "ok") {
-              expect(result).toEqual(["ok", expected[1]]);
-            } else {
-              expect(result[0]).toBe("error");
-            }
-          });
-        }
-      });
+    if (!suffix) { // 考虑到把各种后缀变体都测试一遍意义不大，就只测试无后缀的情况了。
+      if (cases.additionalExamples) {
+        describe("补充示例", () => {
+          for (
+            const [i, [example, rawExpected]] of //
+            Object.entries(cases.additionalExamples!).entries()
+          ) {
+            it(`case ${i + 1}: “${example}”`, () => {
+              const expected: typeof rawExpected = rawExpected[0] === "ok"
+                ? ["ok", makeExpected(rawExpected[1], "")]
+                : rawExpected;
+              const input = `${prefix}${variantName} ${example}`;
+              const parseOpts = { rootPrefix: TEST_ROOT_PREFIX };
+              const result = parseCommand(input, parseOpts);
+              if (expected[0] === "ok") {
+                expect(result).toEqual(["ok", expected[1]]);
+              } else {
+                expect(result[0]).toBe("error");
+              }
+            });
+          }
+        });
+      }
+      if (cases.additionalRawExamples) {
+        describe("补充原生示例", () => {
+          for (
+            const [i, [example, rawExpected]] of //
+            Object.entries(cases.additionalRawExamples!).entries()
+          ) {
+            it(`case ${i + 1}: “${example}”`, () => {
+              const expected: typeof rawExpected = rawExpected[0] === "ok"
+                ? ["ok", makeExpected(rawExpected[1], "")]
+                : rawExpected;
+              const parseOpts = { rootPrefix: TEST_ROOT_PREFIX };
+              const result = parseCommand(example, parseOpts);
+              if (expected[0] === "ok") {
+                expect(result).toEqual(["ok", expected[1]]);
+              } else {
+                expect(result[0]).toBe("error");
+              }
+            });
+          }
+        });
+      }
     }
   }
 });

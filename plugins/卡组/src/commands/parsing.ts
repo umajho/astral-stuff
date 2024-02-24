@@ -83,6 +83,10 @@ function tryParsePluginCommand(
 
   switch (cmd) {
     case "":
+    case "概览":
+      if (!rest) return ["ok", { type: "概览" }];
+      return errorShouldNotHaveArguments(TYPE, "概览");
+
     case "帮助":
     case "列表":
       if (!rest) return ["ok", { type: cmd }];
@@ -114,10 +118,15 @@ export function parseDeckCommand(
   deckName: DeckName,
   opts: { rootPrefix: string },
 ): ["ok", Command] | ["error", string, any?] {
-  if (!input) {
-    return ["ok", { type: "deck", deckName, payload: { type: "" } }];
+  const [cmd, rest] = splitByFirstNonLeadingSpaces(input ?? "");
+
+  if (!cmd || cmd === "概览") {
+    const TYPE: CommandType = "deck";
+    if (!rest) {
+      return ["ok", { type: TYPE, deckName, payload: { type: "概览" } }];
+    }
+    return errorShouldNotHaveArguments(TYPE, "概览");
   }
-  const [cmd, rest] = splitByFirstNonLeadingSpaces(input);
 
   {
     const TYPE: CommandType = "deck_existence";
@@ -365,7 +374,6 @@ function tryParseDeckCommand(
   }
 
   switch (cmd) {
-    case "":
     case "列表":
       if (!rest) return ["ok", { type: cmd }];
       return errorShouldNotHaveArguments(TYPE, cmd);

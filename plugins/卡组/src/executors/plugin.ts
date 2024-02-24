@@ -13,7 +13,7 @@ export class PluginCommandExecutor {
     private readonly opts: { usageURL: string | null },
   ) {}
 
-  execute(cmd: Exclude<PluginCommand, { type: "" }>): ExecutionResult {
+  execute(cmd: Exclude<PluginCommand, { type: "概览" }>): ExecutionResult {
     switch (cmd.type) {
       case "帮助":
         return this.execute帮助(cmd);

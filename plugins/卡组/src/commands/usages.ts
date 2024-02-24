@@ -61,8 +61,10 @@ export const COMMAND_USAGES = {
   plugin: withPrefixType<PluginCommand["type"]>(
     "global",
     {
-      "": {
-        description: "显示本插件概览。",
+      "概览": {
+        description: [
+          "显示本插件概览。",
+        ].join("\n"),
       },
       "帮助": {
         description: "显示于本插件有关的帮助信息。",
@@ -107,7 +109,7 @@ export const COMMAND_USAGES = {
   }),
 
   deck: withPrefixType<DeckCommand["type"]>("deck", {
-    "": {
+    "概览": {
       description: "显示本卡组的概览信息。",
     },
     "列表": {
@@ -276,7 +278,7 @@ export const COMMAND_USAGES = {
  */
 export const COMMAND_EXAMPLES = {
   plugin: {
-    "": [],
+    "概览": [],
     "帮助": [],
     "列表": [],
     "领域设置": ["\n默认卡组 塔罗牌"],
@@ -297,7 +299,7 @@ export const COMMAND_EXAMPLES = {
     "导入": ["Il9fRVhBTVBMRV9fIg=="],
   },
   deck: {
-    "": [],
+    "概览": [],
     "列表": [],
     "查看": ["愚者正位 世界逆位"],
     "设置": [

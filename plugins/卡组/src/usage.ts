@@ -46,7 +46,7 @@ function generateCommandUsagesOfType(
   for (const name in cmds) {
     const usage = cmds[name];
     lines.push(...[
-      `===（${localizeCommandType(typ)}）「${name}」===`,
+      `=== ${localizeCommandType(typ)}::${name} ===`,
       generateCommandUsage(typ, name, usage, opts),
       "",
     ]);

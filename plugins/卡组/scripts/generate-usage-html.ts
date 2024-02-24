@@ -62,14 +62,7 @@ function buildCommandUsagesOfType(
 ): VNode[] {
   return Object.entries(cmds).flatMap(([name, usage]) => {
     return [
-      h("h3", [
-        h(
-          "sup",
-          { style: { "font-size": "x-small" } },
-          `(${localizeCommandType(typ)})`,
-        ),
-        `「${name}」`,
-      ]),
+      h("h3", `${localizeCommandType(typ)}::${name}`),
       ...buildCommandUsage(typ, name, usage),
     ];
   });

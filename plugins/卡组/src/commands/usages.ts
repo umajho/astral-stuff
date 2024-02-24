@@ -357,16 +357,20 @@ export function generateCommandUsageText(
   const format = generateCommandFormat(usage, head, genOpts);
   const description = generateCommandDescription(usage, genOpts);
 
-  const lines = [`“${format}”`, description];
+  const lines = [
+    `“${format}”`,
+    description.split("\n").map((l) => "　　" + l).join("\n"),
+  ];
 
   if (examples.length) {
     lines.push("示例：");
     for (const example of examples) {
       lines.push(
-        generateCommandExample(example, head + (usage.suffixes?.[0] ?? ""), {
-          ...genOpts,
-          substitutesNewLine: true,
-        }),
+        "　　" +
+          generateCommandExample(example, head + (usage.suffixes?.[0] ?? ""), {
+            ...genOpts,
+            substitutesNewLine: true,
+          }),
       );
     }
   }

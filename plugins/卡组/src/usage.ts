@@ -26,8 +26,8 @@ function generateCommandsSectionOfUsage(opts: { rootPrefix: string }): string {
     const typ = typ_ as CommandType;
     const cmds = COMMAND_USAGES[typ];
     lines.push(...[
-      `=== 类型「${localizeCommandType(typ)}」===`,
-      "",
+      // `=== 类型「${localizeCommandType(typ)}」===`,
+      // "",
       generateCommandUsagesOfType(typ, cmds, opts),
       "",
     ]);
@@ -46,7 +46,7 @@ function generateCommandUsagesOfType(
   for (const name in cmds) {
     const usage = cmds[name];
     lines.push(...[
-      `==== 命令「${name}」====`,
+      `===（${localizeCommandType(typ)}）「${name}」===`,
       generateCommandUsage(typ, name, usage, opts),
       "",
     ]);

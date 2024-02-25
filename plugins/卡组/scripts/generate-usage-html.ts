@@ -17,7 +17,7 @@ import {
   generateCommandPrefixForUsageFormat,
 } from "../src/commands/usages.ts";
 import { CommandType, localizeCommandType } from "../src/commands/types.ts";
-import { ROOT_PREFIX } from "../src/consts.ts";
+import { DEFAULT_ROOT_PREFIX } from "../src/consts.ts";
 import { generateCommandPrefixEx } from "../src/commands/test-utils.ts";
 import { DeckName } from "../src/ids.ts";
 
@@ -73,7 +73,7 @@ function buildCommandUsage(
   name: string,
   usage: CommandUsage,
 ): VNode[] {
-  const opts = { rootPrefix: ROOT_PREFIX, commandName: name };
+  const opts = { rootPrefix: DEFAULT_ROOT_PREFIX, commandName: name };
 
   const prefixForFormat = //
     generateCommandPrefixForUsageFormat(usage.prefixType, opts);

@@ -1,7 +1,7 @@
 import { AstralDiceAPI } from "astral-dice-types";
 
 import { Command, parseCommand, parseDeckCommand } from "./commands/mod.ts";
-import { PLUGIN_NAME, ROOT_PREFIX } from "./consts.ts";
+import { PLUGIN_NAME } from "./consts.ts";
 import { DeckCommandExecutor } from "./executors/deck.ts";
 import { DeckDiscardPileCommandExecutor } from "./executors/deck_discard_pile.ts";
 import { DeckExistenceCommandExecutor } from "./executors/deck_existence.ts";
@@ -11,8 +11,6 @@ import { Deck } from "./models/decks.ts";
 import { Scope, Scopes } from "./models/scopes.ts";
 import { AstralRepo, Repo } from "./repo.ts";
 import { exhaustive } from "./ts-utils.ts";
-
-export type MainPrefix = "卡组" | ":" | "：";
 
 export type ExecutionResult =
   | ["ok", string, Saver]
@@ -27,14 +25,42 @@ export type Saver =
 
 export class MainExecutor {
   private readonly repo: Repo;
+  private readonly info: { version: string; homepage: string };
+  private readonly rootPrefix: string;
+  /**
+   * - "regular": 一般模式。开头用的是根前缀（如 “卡组”）。
+   * - "for_scope_default": 领域默认卡组模式。
+   *   开头用的是冒号（“:” 或 “：”），相当于此冒号被扩展为 “<根前缀>：<领域默认卡组>”。
+   */
+  private readonly mode: "regular" | "for_scope_default";
+  /**
+   * 完整的输入，不用于解析，仅用于帮助信息等辅助功能。
+   */
+  private readonly inputFull: string;
+  /**
+   * 紧随决定模式的前缀之后的输入，用于解析
+   */
+  private readonly inputAfterPrefix: string;
+  private readonly senderID: UserID;
   constructor(
     private readonly api: AstralDiceAPI,
-    private readonly info: { version: string; homepage: string },
-    private readonly mainPrefix: MainPrefix,
-    private readonly restText: string,
-    private readonly senderID: UserID,
+    opts: {
+      info: { version: string; homepage: string };
+      rootPrefix: string;
+      mode: "regular" | "for_scope_default";
+      inputFull: string;
+      inputAfterPrefix: string;
+      senderID: UserID;
+    },
   ) {
     this.repo = new AstralRepo(api);
+
+    this.info = opts.info;
+    this.rootPrefix = opts.rootPrefix;
+    this.mode = opts.mode;
+    this.inputFull = opts.inputFull;
+    this.inputAfterPrefix = opts.inputAfterPrefix;
+    this.senderID = opts.senderID;
   }
 
   private hasBeenExecuted = false;
@@ -49,8 +75,10 @@ export class MainExecutor {
     let mainAdmins: UserID[];
     let scope: Scope;
     let parseResult: ReturnType<typeof parseCommand>;
-    if (this.mainPrefix === "卡组") {
-      parseResult = parseCommand(this.restText, { rootPrefix: ROOT_PREFIX });
+    if (this.mode === "regular") {
+      parseResult = parseCommand(this.inputAfterPrefix, {
+        rootPrefix: this.rootPrefix,
+      });
       if (parseResult[0] === "ignore") return;
       if (parseResult[0] === "error") {
         this.api.reply("错误：\n" + parseResult[1]);
@@ -80,8 +108,8 @@ export class MainExecutor {
       const defaultDeckName = scope?.attr默认卡组;
       if (!defaultDeckName) return;
 
-      parseResult = parseDeckCommand(this.restText, defaultDeckName, {
-        rootPrefix: ROOT_PREFIX,
+      parseResult = parseDeckCommand(this.inputAfterPrefix, defaultDeckName, {
+        rootPrefix: this.rootPrefix,
       });
       if (parseResult[0] === "error") {
         this.api.reply("错误：\n" + parseResult[1]);
@@ -98,6 +126,7 @@ export class MainExecutor {
           break;
         }
         const executor = new PluginCommandExecutor(scope, this.senderID, {
+          rootPrefix: this.rootPrefix,
           usageURL: ("" + this.api.getConfig("usage-url")) || null,
         });
         execResult = executor.execute(cmd.payload);
@@ -184,7 +213,7 @@ export class MainExecutor {
           `TODO: ${execResult[1] ?? "实现对应功能"}`,
           "",
           "输入：",
-          this.mainPrefix + this.restText,
+          this.inputFull,
           "解析结果：",
           JSON.stringify(parseResult, null, 2),
         ].join("\n"));

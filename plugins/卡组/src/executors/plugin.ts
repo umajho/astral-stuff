@@ -2,7 +2,6 @@ import { ExecutionResult } from "../main-executor.ts";
 import { PluginCommand } from "../commands/mod.ts";
 import { Scope } from "../models/scopes.ts";
 import { generateUsage } from "../usage.ts";
-import { ROOT_PREFIX } from "../consts.ts";
 import { UserID } from "../ids.ts";
 import { exhaustive } from "../ts-utils.ts";
 
@@ -10,7 +9,10 @@ export class PluginCommandExecutor {
   constructor(
     private readonly scope: Scope,
     private readonly senderID: UserID,
-    private readonly opts: { usageURL: string | null },
+    private readonly opts: {
+      rootPrefix: string;
+      usageURL: string | null;
+    },
   ) {}
 
   execute(cmd: Exclude<PluginCommand, { type: "概览" }>): ExecutionResult {
@@ -29,7 +31,7 @@ export class PluginCommandExecutor {
   private execute帮助(cmd: PluginCommand & { type: "帮助" }): ExecutionResult {
     const filters = cmd.filters && [...cmd.filters];
     const usage = generateUsage(this.opts.usageURL, {
-      rootPrefix: ROOT_PREFIX,
+      rootPrefix: this.opts.rootPrefix,
       filtersMut: filters,
     });
     if (filters?.length) {

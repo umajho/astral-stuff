@@ -4,9 +4,10 @@ import { createInterface } from "node:readline";
 
 import { MockRuntime, Place } from "astral-dice-lib-mock";
 import { UserID } from "../src/ids.ts";
-import { MainExecutor, MainPrefix } from "../src/main-executor.ts";
+import { MainExecutor } from "../src/main-executor.ts";
 // @ts-ignore
 import { keywordRegexp } from "../core-configs.js";
+import { DEFAULT_ROOT_PREFIX } from "../src/consts.ts";
 
 const readline = createInterface({
   input: process.stdin,
@@ -47,12 +48,20 @@ function evaluate(rtm: MockRuntime, senderID: UserID, input: string) {
     return;
   }
 
-  const mainPrefix = g[1] as MainPrefix;
-  const restText = g[2];
+  const mainPrefix = g[1], restText = g[2];
+
+  const rootPrefix = DEFAULT_ROOT_PREFIX;
 
   rtm.useLib((lib) => {
     const executor = //
-      new MainExecutor(lib, packageJSON, mainPrefix, restText, senderID);
+      new MainExecutor(lib, {
+        info: packageJSON,
+        rootPrefix,
+        mode: mainPrefix === rootPrefix ? "regular" : "for_scope_default",
+        inputFull: input,
+        inputAfterPrefix: restText,
+        senderID,
+      });
     executor.execute();
   });
 }

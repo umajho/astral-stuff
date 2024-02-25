@@ -1,8 +1,10 @@
 import packageJSON from "../package.json" assert { type: "json" };
 
-import { PLUGIN_NAME } from "./consts.ts";
+import { DEFAULT_ROOT_PREFIX, PLUGIN_NAME } from "./consts.ts";
 import { UserID } from "./ids.ts";
-import { MainExecutor, MainPrefix } from "./main-executor.ts";
+import { MainExecutor } from "./main-executor.ts";
+
+type MainPrefix = "卡组" | ":" | "：";
 
 declare const v1: string, v2: string, v3: string;
 
@@ -13,8 +15,17 @@ const senderID = v3;
 function main(mainPrefix: MainPrefix, restText: string, senderID_: string) {
   const senderID = new UserID(senderID_);
 
+  const rootPrefix = DEFAULT_ROOT_PREFIX;
+
   const executor = //
-    new MainExecutor(Lib, packageJSON, mainPrefix, restText, senderID);
+    new MainExecutor(Lib, {
+      info: packageJSON,
+      rootPrefix,
+      mode: mainPrefix === rootPrefix ? "regular" : "for_scope_default",
+      inputFull: mainPrefix + restText,
+      inputAfterPrefix: restText,
+      senderID,
+    });
   executor.execute();
 }
 

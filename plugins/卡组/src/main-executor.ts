@@ -1,6 +1,11 @@
 import { AstralDiceAPI } from "astral-dice-types";
 
-import { Command, parseCommand, parseDeckCommand } from "./commands/mod.ts";
+import {
+  Command,
+  findCommandUsageHeadsByName,
+  parseCommand,
+  parseDeckCommand,
+} from "./commands/mod.ts";
 import { PLUGIN_NAME } from "./consts.ts";
 import { DeckCommandExecutor } from "./executors/deck.ts";
 import { DeckDiscardPileCommandExecutor } from "./executors/deck_discard_pile.ts";
@@ -284,6 +289,11 @@ export class MainExecutor {
       const deck = new Deck(deckName, deckData, scope);
       return cb(deck, payload);
     } else {
+      const possibleIntentions: string[] = findCommandUsageHeadsByName(
+        "" + deckName,
+        { rootPrefix: this.rootPrefix },
+      );
+
       return [
         "error",
         [
@@ -291,6 +301,13 @@ export class MainExecutor {
           "",
           `（发送 “${this.rootPrefix}：${deckName} 创建” 创建该卡组。）`,
           `（发送 “${this.rootPrefix}帮助 卡组存在::创建” 查询前述命令的用法。）`,
+          ...(possibleIntentions.length
+            ? [
+              `（是否其实想使用：${
+                possibleIntentions.map((x) => `“${x}”`).join("")
+              }？）`,
+            ]
+            : []),
         ].join("\n"),
       ];
     }

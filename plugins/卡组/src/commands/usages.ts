@@ -496,3 +496,40 @@ function withPrefixType<T extends string>(
   }
   return result;
 }
+
+function getCommandPrefixTypeOfCommandType(
+  typ: CommandType,
+): CommandPrefixType {
+  switch (typ) {
+    case "plugin":
+      return "global";
+    case "deck_existence":
+    case "between_decks":
+      return "deck";
+    default:
+      return typ;
+  }
+}
+
+/**
+ * 找到对应名称的命令，收集这些命令的用法头部。
+ *
+ * 比如对于名称 “概览”，有命令 “插件::概览” 和 “卡组::概览”，这两个命令的用法头
+ * 部分别为 `"卡组概览"` 和 `"卡组：<卡组名> 概览"`。
+ */
+export function findCommandUsageHeadsByName(
+  name: string,
+  opts: { rootPrefix: string },
+): string[] {
+  const output: string[] = [];
+  for (const cmdType_ in COMMAND_USAGES) {
+    const cmdType = cmdType_ as CommandType;
+    const cmds = COMMAND_USAGES[cmdType];
+    if (name in cmds) {
+      const prefixType = getCommandPrefixTypeOfCommandType(cmdType);
+      const head = generateCommandPrefixForUsageFormat(prefixType, opts) + name;
+      output.push(head);
+    }
+  }
+  return output;
+}

@@ -286,7 +286,12 @@ export class MainExecutor {
     } else {
       return [
         "error",
-        `领域 “${scope.name}” 当中不存在卡组 “${deckName}”`,
+        [
+          `领域 “${scope.name}” 当中不存在卡组 “${deckName}”`,
+          "",
+          `（发送 “${this.rootPrefix}：${deckName} 创建” 创建该卡组。）`,
+          `（发送 “${this.rootPrefix}帮助 卡组存在::创建” 查询前述命令的用法。）`,
+        ].join("\n"),
       ];
     }
   }

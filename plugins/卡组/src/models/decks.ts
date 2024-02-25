@@ -367,7 +367,7 @@ export class Deck {
 
   draw(n: number): ["ok", Card[]] | ["error", string] {
     if (this.data.drawPile.length === 0) {
-      return ["error", "抽卡堆为空，无法抽卡"];
+      return ["error", "抽牌堆为空，无法抽卡"];
     }
     const cards: string[] = [];
     const putBackMode = this.putBackMode;
@@ -387,7 +387,7 @@ export class Deck {
         if (this.data.drawPile.length < n) {
           return [
             "error",
-            `抽卡堆中只有 ${this.data.drawPile.length} 张卡` +
+            `抽牌堆中只有 ${this.data.drawPile.length} 张卡` +
             `无法满足不放回地抽 ${n} 张卡`,
           ];
         }
@@ -436,7 +436,7 @@ export class Deck {
         if (this.data.drawPile.length < n) {
           return [
             "error",
-            `抽卡堆中只有 ${this.data.drawPile.length} 张卡` +
+            `抽牌堆中只有 ${this.data.drawPile.length} 张卡` +
             `无法满足一次性抽 ${n} 张卡`,
           ];
         }

@@ -64,7 +64,7 @@ export class DeckDiscardPileCommandExecutor {
 
     return [
       "ok",
-      "已将弃牌堆中的全部卡牌回收至抽卡堆中。",
+      "已将弃牌堆中的全部卡牌回收至抽牌堆中。",
       { scopes: null, decks: [this.deck] },
     ];
   }

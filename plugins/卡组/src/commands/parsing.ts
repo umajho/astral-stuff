@@ -24,7 +24,10 @@ import {
   DeckHandCommand,
   PluginCommand,
 } from "./types.ts";
-import { appendErrorMessageWithCommandUsage } from "./usages.ts";
+import {
+  appendErrorMessageWithCommandUsage,
+  findCommandUsageHeadsByName,
+} from "./usages.ts";
 
 const MAX_SAFE_INTEGER = 9_007_199_254_740_991;
 
@@ -45,7 +48,7 @@ export function parseCommand(
 
     const [cmd, rest] = splitByFirstNonLeadingSpaces(input);
 
-    const result = tryParsePluginCommand(cmd, rest);
+    const result = tryParsePluginCommand(cmd, rest, opts);
     switch (result[0]) {
       case "ok":
         return ["ok", { type: TYPE, payload: result[1] }];
@@ -57,6 +60,21 @@ export function parseCommand(
           opts,
         );
       case "not_found":
+        const possibleIntentions = findCommandUsageHeadsByName(cmd, {
+          rootPrefix: opts.rootPrefix,
+          excludedCommandTypes: ["plugin"],
+        });
+        if (possibleIntentions.length) {
+          return [
+            "error",
+            [
+              `（是否其实想使用：${
+                possibleIntentions.map((x) => `“${x}”`).join("")
+              }？）`,
+            ].join("\n"),
+          ];
+        }
+
         return didInputHaveLeadingSpaces
           ? errorUnknownCommand(TYPE, cmd) // 专门留了空白，很可能是输错了命令。
           : ["ignore"]; // 没专门留空白，更可能是以 “卡组” 开头的一般对话。
@@ -72,6 +90,7 @@ export function parseCommand(
 function tryParsePluginCommand(
   cmd: string,
   rest: string | null,
+  opts: { rootPrefix: string },
 ):
   | ["ok", PluginCommand]
   | ["error", string, { commandName: PluginCommand["type"] }]

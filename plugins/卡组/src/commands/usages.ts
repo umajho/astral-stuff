@@ -519,11 +519,20 @@ function getCommandPrefixTypeOfCommandType(
  */
 export function findCommandUsageHeadsByName(
   name: string,
-  opts: { rootPrefix: string },
+  opts: {
+    rootPrefix: string;
+    excludedCommandTypes?: CommandType[];
+  },
 ): string[] {
   const output: string[] = [];
   for (const cmdType_ in COMMAND_USAGES) {
     const cmdType = cmdType_ as CommandType;
+    if (
+      opts.excludedCommandTypes &&
+      opts.excludedCommandTypes.indexOf(cmdType) >= 0
+    ) {
+      continue;
+    }
     const cmds = COMMAND_USAGES[cmdType];
     if (name in cmds) {
       const prefixType = getCommandPrefixTypeOfCommandType(cmdType);

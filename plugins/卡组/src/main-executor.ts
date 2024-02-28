@@ -162,7 +162,9 @@ export class MainExecutor {
           cmd.payload,
           (deck, payload) => {
             const executor = //
-              new DeckCommandExecutor(scope, deck, this.senderID);
+              new DeckCommandExecutor(scope, deck, this.senderID, {
+                rootPrefix: this.rootPrefix,
+              });
             return executor.execute(payload);
           },
         );

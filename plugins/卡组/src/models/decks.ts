@@ -1,14 +1,16 @@
-// //TODO!!
-// const DECK_ATTRIBUTE_NAMES = ["日志输出群"] as const;
-// export type DeckAttributeName = (typeof DECK_ATTRIBUTE_NAMES)[number];
-
 import {
+  AttributeSetters,
   CardNameWithDescriptionAndOptionalAmount,
   CardNameWithOptionalAmount,
 } from "../commands/types.ts";
 import { CardName, DeckName, ScopeID, UserID } from "../ids.ts";
 import { randomInt, shuffle } from "../js-utils.ts";
 import { exhaustive } from "../ts-utils.ts";
+import {
+  DeckAttributeName,
+  DeckAttributes,
+  generateDeckAttributesText,
+} from "./deck-attributes.ts";
 import {
   DiscardFlags,
   extractDiscardFlags,
@@ -53,7 +55,7 @@ export class Card {
 
 export interface DeckData {
   mainOwner: string;
-  attributes: {}; //TODO!!: { [Name in DeckAttributeName]?: string | null };
+  attributes: DeckAttributes;
   flags: Exclude<FlagName, "领域默认">[];
   cards: {
     [name: string]: {
@@ -117,6 +119,7 @@ export class Deck {
   generateSummaryText(): string {
     return [
       `= 卡组 “${this.name}” =`,
+      ...(this.attributes.描述 ? [this.attributes.描述] : []),
       "主拥有者：" + this.mainOwner,
       "卡牌种类数：" + this.totalCardKinds,
       "卡牌总数：" + this.totalCards,
@@ -126,6 +129,10 @@ export class Deck {
       generateDeckFlagsText(this.fullFlags, {
         deckName: this.name,
       }),
+      "",
+      "== 属性 ==",
+      "",
+      generateDeckAttributesText(this.attributes),
     ].join("\n");
   }
 
@@ -171,6 +178,43 @@ export class Deck {
       if (result[0] !== "ok") {
         return ["error", "? recycleDiscardPile in updateFlags"];
       }
+    }
+
+    return ["ok"];
+  }
+
+  get attributes(): DeckAttributes {
+    return this.data.attributes;
+  }
+
+  updateAttributes(
+    attributeSetters: AttributeSetters,
+    senderID: UserID,
+  ): ["ok"] | ["error", string] {
+    const unknownNames: string[] = [];
+    for (const name in attributeSetters) {
+      const value = attributeSetters[name];
+      switch (name) {
+        case "描述":
+          if (value !== null) {
+            this.data.attributes["描述"] = value;
+          } else {
+            delete this.data.attributes["描述"];
+          }
+          break;
+        default:
+          unknownNames.push(name);
+      }
+    }
+
+    if (unknownNames.length) {
+      return [
+        "error",
+        [
+          "未知卡组属性名：",
+          unknownNames.join("\n"),
+        ].join("\n"),
+      ];
     }
 
     return ["ok"];

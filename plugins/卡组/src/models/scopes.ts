@@ -10,7 +10,7 @@ const SCOPE_ATTRIBUTE_DEFAULTS = {
 } satisfies { [Name in ScopeAttributeName]: string };
 
 export interface ScopeData {
-  attributes: { [Name in ScopeAttributeName]?: string | null };
+  attributes: { [Name in ScopeAttributeName]?: string };
   decks: string[];
 }
 
@@ -54,7 +54,11 @@ export class Scope {
       return ["error", "领域属性 “管理员” 的值只能由主管理员修改"];
     }
 
-    this.data.attributes[name] = rawValue;
+    if (rawValue !== null) {
+      this.data.attributes[name] = rawValue;
+    } else {
+      delete this.data.attributes[name];
+    }
 
     return ["ok"];
   }
@@ -91,10 +95,13 @@ export class Scope {
   }
 
   generateAttributesText(): string {
-    return SCOPE_ATTRIBUTE_NAMES.map((name) =>
-      (this.data.attributes[name] ? "" : "（默认）") +
-      `${name} ${this.getAttributeText(name)}`
-    ).join("\n");
+    return SCOPE_ATTRIBUTE_NAMES.map((name) => {
+      const hasBeenSet = !!this.data.attributes[name];
+      const value = this.getAttributeText(name);
+      return (hasBeenSet ? "" : "（默认）") +
+        (!!value ? "" : "（空值）") +
+        `${name} ${value}`;
+    }).join("\n");
   }
 
   isAdmin(id: UserID): boolean {

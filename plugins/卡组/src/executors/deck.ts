@@ -13,6 +13,9 @@ export class DeckCommandExecutor {
     private readonly scope: Scope,
     private readonly deck: Deck,
     private readonly senderID: UserID,
+    private readonly opts: {
+      rootPrefix: string;
+    },
   ) {}
 
   execute(cmd: DeckCommand): ExecutionResult {
@@ -71,11 +74,27 @@ export class DeckCommandExecutor {
   }
 
   execute设置(cmd: DeckCommand & { type: "设置" }): ExecutionResult {
-    const updateResult = this.deck.updateFlags(cmd.flagSetters, this.senderID);
-    if (updateResult[0] === "error") return updateResult;
+    if (!cmd.flagSetters.length && !Object.keys(cmd.attributeSetters).length) {
+      return [
+        "error",
+        [
+          "需要至少提供一项要更新的设置",
+          "",
+          `（如要查看卡组现有设置，发送 “${this.opts.rootPrefix}：${this.deck.name} 概览”。）`,
+        ].join("\n"),
+      ];
+    }
+
+    if (cmd.flagSetters.length) {
+      const updateResult = //
+        this.deck.updateFlags(cmd.flagSetters, this.senderID);
+      if (updateResult[0] === "error") return updateResult;
+    }
 
     if (Object.keys(cmd.attributeSetters).length) {
-      return ["todo", "实现卡组属性"];
+      const updateResult = //
+        this.deck.updateAttributes(cmd.attributeSetters, this.senderID);
+      if (updateResult[0] === "error") return updateResult;
     }
 
     return [

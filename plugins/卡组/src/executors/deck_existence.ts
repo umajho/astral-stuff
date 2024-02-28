@@ -28,11 +28,15 @@ export class DeckExistenceCommandExecutor {
     const deckData = makeNewDeckData(senderID);
     const deck = new Deck(deckName, deckData, scope);
 
-    const updateResult = deck.updateFlags(cmd.flagSetters, senderID);
-    if (updateResult[0] === "error") return updateResult;
+    if (cmd.flagSetters.length) {
+      const updateResult = deck.updateFlags(cmd.flagSetters, senderID);
+      if (updateResult[0] === "error") return updateResult;
+    }
 
     if (Object.keys(cmd.attributeSetters).length) {
-      return ["todo", "实现卡组属性"];
+      const updateResult = //
+        deck.updateAttributes(cmd.attributeSetters, senderID);
+      if (updateResult[0] === "error") return updateResult;
     }
 
     const addResult = deck.addCards(

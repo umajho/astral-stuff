@@ -93,7 +93,7 @@ export class DeckCommandExecutor {
 
     if (Object.keys(cmd.attributeSetters).length) {
       const updateResult = //
-        this.deck.updateAttributes(cmd.attributeSetters, this.senderID);
+        this.deck.updateAttributes(cmd.attributeSetters);
       if (updateResult[0] === "error") return updateResult;
     }
 

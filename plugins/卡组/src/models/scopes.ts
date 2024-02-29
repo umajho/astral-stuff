@@ -11,7 +11,16 @@ const SCOPE_ATTRIBUTE_DEFAULTS = {
 
 export interface ScopeData {
   attributes: { [Name in ScopeAttributeName]?: string };
-  decks: string[];
+  /**
+   * XXX: 为了能让 DeckAttributes 正确运作，修改某个卡组的数据时不应替换整个
+   * DeckInScopeData。
+   */
+  decks: DeckInScopeData[];
+}
+
+export interface DeckInScopeData {
+  name: string;
+  description: string | null;
 }
 
 export function makeEmptyScopeData(): ScopeData {
@@ -113,26 +122,61 @@ export class Scope {
     return this.mainAdmins.some((u) => u.equals(id));
   }
 
-  get decks(): DeckName[] {
-    return this.data.decks.map((d) => new DeckName(d));
+  get decks(): DeckInScope[] {
+    return this.data.decks.map((d) => new DeckInScope(d));
   }
 
-  declareDeck(name: DeckName): ["ok"] | ["error", string] {
+  getDeckByName(name: DeckName): DeckInScope | null {
+    const deck = this.data.decks.find((d) => d.name === "" + name);
+    return deck ? new DeckInScope(deck) : null;
+  }
+
+  declareDeck(
+    name: DeckName,
+  ): ["ok"] | ["error", string] {
     if (/\s/.test("" + name)) return ["error", "卡组名中不能含有空白"];
-    if (this.data.decks.some((d) => d === "" + name)) {
+    if (this.data.decks.some((d) => d.name === "" + name)) {
       return ["error", `名为 “${name}” 的卡组已经存在`];
     }
-    this.data.decks.push("" + name);
+    this.data.decks.push({
+      name: "" + name,
+      description: null,
+    });
     this.data.decks.sort();
     return ["ok"];
   }
+  updateDeckOptions(
+    name: DeckName,
+    opts: { description?: string | null },
+  ): ["ok"] {
+    const deck = this.getDeckByName(name)!;
+    if (opts.description !== undefined) {
+      deck.description = opts.description;
+    }
+    return ["ok"];
+  }
   revokeDeck(name: DeckName): ["ok"] | ["error", string] {
-    const idx = this.data.decks.indexOf("" + name);
+    const idx = this.data.decks.findIndex((d) => d.name === "" + name);
     if (idx < 0) {
       return ["error", `不存在名为 “${name}” 的卡组`];
     }
     this.data.decks.splice(idx, 1);
     return ["ok"];
+  }
+}
+
+export class DeckInScope {
+  constructor(private readonly data: DeckInScopeData) {}
+
+  get name() {
+    return new DeckName(this.data.name);
+  }
+
+  get description() {
+    return this.data.description;
+  }
+  set description(value: string | null) {
+    this.data.description = value;
   }
 }
 

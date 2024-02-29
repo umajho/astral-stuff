@@ -6,11 +6,7 @@ import {
 import { CardName, DeckName, ScopeID, UserID } from "../ids.ts";
 import { randomInt, shuffle } from "../js-utils.ts";
 import { exhaustive } from "../ts-utils.ts";
-import {
-  DeckAttributeName,
-  DeckAttributes,
-  generateDeckAttributesText,
-} from "./deck-attributes.ts";
+import { DeckAttributes } from "./deck-attributes.ts";
 import {
   DiscardFlags,
   extractDiscardFlags,
@@ -55,7 +51,6 @@ export class Card {
 
 export interface DeckData {
   mainOwner: string;
-  attributes: DeckAttributes;
   flags: Exclude<FlagName, "领域默认">[];
   cards: {
     [name: string]: {
@@ -75,7 +70,6 @@ export interface DeckData {
 export function makeNewDeckData(mainOwner: UserID): DeckData {
   return {
     mainOwner: mainOwner.userID,
-    attributes: {},
     flags: ["放回"],
     cards: {},
     drawPile: [],
@@ -86,11 +80,15 @@ export function makeNewDeckData(mainOwner: UserID): DeckData {
 }
 
 export class Deck {
+  private readonly attributes: DeckAttributes;
+
   constructor(
     public readonly name: DeckName,
     private readonly data: DeckData,
     private readonly scope: Scope,
-  ) {}
+  ) {
+    this.attributes = new DeckAttributes(scope, this);
+  }
 
   get scopeID(): ScopeID {
     return this.scope.name;
@@ -117,9 +115,11 @@ export class Deck {
   }
 
   generateSummaryText(): string {
+    const description = this.attributes.描述;
+
     return [
       `= 卡组 “${this.name}” =`,
-      ...(this.attributes.描述 ? [this.attributes.描述] : []),
+      ...(description ? [description] : []),
       "主拥有者：" + this.mainOwner,
       "卡牌种类数：" + this.totalCardKinds,
       "卡牌总数：" + this.totalCards,
@@ -132,7 +132,7 @@ export class Deck {
       "",
       "== 属性 ==",
       "",
-      generateDeckAttributesText(this.attributes),
+      this.attributes.generateText(),
     ].join("\n");
   }
 
@@ -183,41 +183,10 @@ export class Deck {
     return ["ok"];
   }
 
-  get attributes(): DeckAttributes {
-    return this.data.attributes;
-  }
-
   updateAttributes(
     attributeSetters: AttributeSetters,
-    senderID: UserID,
   ): ["ok"] | ["error", string] {
-    const unknownNames: string[] = [];
-    for (const name in attributeSetters) {
-      const value = attributeSetters[name];
-      switch (name) {
-        case "描述":
-          if (value !== null) {
-            this.data.attributes["描述"] = value;
-          } else {
-            delete this.data.attributes["描述"];
-          }
-          break;
-        default:
-          unknownNames.push(name);
-      }
-    }
-
-    if (unknownNames.length) {
-      return [
-        "error",
-        [
-          "未知卡组属性名：",
-          unknownNames.join("\n"),
-        ].join("\n"),
-      ];
-    }
-
-    return ["ok"];
+    return this.attributes.update(attributeSetters);
   }
 
   addCards(

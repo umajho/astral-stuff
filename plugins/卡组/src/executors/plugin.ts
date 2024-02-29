@@ -45,8 +45,7 @@ export class PluginCommandExecutor {
     return [
       "ok",
       `领域 “${this.scope.name}” 现有卡组（共 ${decks.length} 套）：\n` +
-      // TODO: 应该包含卡组的描述。
-      decks.map((d) => "" + d).join("\n"),
+      decks.map((d) => `${"" + d.name}：${d.description}`).join("\n"),
       null,
     ];
   }

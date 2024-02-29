@@ -35,7 +35,7 @@ export class DeckExistenceCommandExecutor {
 
     if (Object.keys(cmd.attributeSetters).length) {
       const updateResult = //
-        deck.updateAttributes(cmd.attributeSetters, senderID);
+        deck.updateAttributes(cmd.attributeSetters);
       if (updateResult[0] === "error") return updateResult;
     }
 

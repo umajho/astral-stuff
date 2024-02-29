@@ -456,7 +456,9 @@ function tryParseDeckCommand(
     }
 
     case "抽卡":
+    case "抽牌":
     case "抽卡至私聊":
+    case "抽牌至私聊":
     case "窥视":
     case "窥视至私聊": {
       const to = /至私聊/.test(cmd) ? "senderPrivate" : "currentPlace";
@@ -470,7 +472,10 @@ function tryParseDeckCommand(
           return errorBadArguments(TYPE, "抽卡", "数量过大");
         }
       }
-      return ["ok", { type: /抽卡/.test(cmd) ? "抽卡" : "窥视", to, amount }];
+      return [
+        "ok",
+        { type: /^抽[卡牌]/.test(cmd) ? "抽卡" : "窥视", to, amount },
+      ];
     }
 
     case "洗牌":

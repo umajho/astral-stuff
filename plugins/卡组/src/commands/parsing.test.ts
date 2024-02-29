@@ -386,6 +386,23 @@ const COMMAND_CASES = {
           },
         },
       },
+      additionalRawExamples: {
+        [`：${TEST_DECK_NAME} 抽牌 5`]: [
+          "ok",
+          // XXX: 不用 IIFE 明确类型的话，原本在 `to: DECIDE_LATER,` 的错误就会
+          // 跑到 `additionalRawExamples:` 更外层的那里。
+          ((): Command => ({
+            type: "deck",
+            deckName: TEST_DECK_NAME,
+            payload: {
+              type: "抽卡",
+              // @ts-ignore
+              to: DECIDE_LATER,
+              amount: 5,
+            },
+          }))(),
+        ],
+      },
     },
     "窥视": {
       suffixPayloadPatches: {

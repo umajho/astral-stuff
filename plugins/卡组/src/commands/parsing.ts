@@ -717,21 +717,21 @@ export function parseNewCards(text: string):
   type A = number | null; // “A” 指 “Amount“
   type State =
     // 一开始，或是结束符号匹配完成：期待「数量」或「卡名」。
-    | ["$amount|$name"]
+    | [t: "$amount|$name"]
     // 数量途中：期待继续的「数量」或标记结束用的 “#”。
-    | ["$amount|#", a_: string]
+    | [t: "$amount|#", a_: string]
     // “#” 后：期待「卡名」。
-    | ["$name", a: A]
+    | [t: "$name", a: A]
     // 卡名途中：期待「卡名」或「描述的『打开符号』」。
-    | ["$name|$open", a: A, name_: string]
+    | [t: "$name|$open", a: A, name_: string]
     // 卡名遇到空白后：期待「描述的『打开符号』」。
-    | ["$open", a: A, name: string]
+    | [t: "$open", a: A, name: string]
     // 打开符号途中：期待继续的「打开符号」或「描述」或「结束符号」。
-    | ["$open|$desc|$close", a: A, name: string, open_: S]
+    | [t: "$open|$desc|$close", a: A, name: string, open_: S]
     // 描述途中：期待继续的「描述」或「结束符号」。
-    | ["$desc|$close", a: A, name: string, open: S, desc_: string]
+    | [t: "$desc|$close", a: A, name: string, open: S, desc_: string]
     // 结束符号途中：期待继续的「结束符号」。
-    | ["$close", a: A, name: string, open: S, desc: string, close_: number];
+    | [t: "$close", a: A, name: string, open: S, desc: string, close_: number];
   let state: State = ["$amount|$name"];
 
   // TODO: 放到更合适的地方。

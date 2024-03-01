@@ -42,10 +42,15 @@ export class PluginCommandExecutor {
 
   private execute列表(_cmd: PluginCommand & { type: "列表" }): ExecutionResult {
     const decks = this.scope.decks;
+    const lines: string[] = [];
+    for (const name in decks) {
+      const data = decks[name]!;
+      lines.push(`${"" + name}：${data.description}`);
+    }
     return [
       "ok",
       `领域 “${this.scope.name}” 现有卡组（共 ${decks.length} 套）：\n` +
-      decks.map((d) => `${"" + d.name}：${d.description}`).join("\n"),
+      lines.join("\n"),
       null,
     ];
   }

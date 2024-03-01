@@ -1,4 +1,4 @@
-const defaultTexts = {
+export const defaultTexts = {
   "ONLY_IN_GROUP": "请在群组中游玩！",
   "BULLETS_0": "至少要装入一枚子弹！",
   "BULLETS_FULL": "？？子弹已装满。",
@@ -10,14 +10,4 @@ const defaultTexts = {
   "NEXT_GAME": "子弹已用完，重新装入{bullets}枚子弹！",
 };
 
-type Texts = typeof defaultTexts;
-
-const TEXTS: Texts = (() => {
-  try {
-    return JSON.parse("" + Lib.getConfig("texts"));
-  } catch {
-    return defaultTexts;
-  }
-})();
-
-export default TEXTS;
+export type Texts = typeof defaultTexts;

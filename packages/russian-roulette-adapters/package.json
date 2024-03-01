@@ -1,0 +1,12 @@
+{
+  "name": "russian-roulette-adapters",
+  "version": "1.0.0",
+  "main": "src/mod.ts",
+  "type": "module",
+  "author": "Umaĵo",
+  "homepage": "https://github.com/umajho/astral-stuff/tree/main/plugins/轮盘赌",
+  "license": "MIT",
+  "devDependencies": {
+    "russian-roulette-core": "workspace:*"
+  }
+}

@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { Game } from "./game.js";
+import { Game } from "./game";
+import { defaultTexts } from "./texts";
 
 describe("Game", () => {
   let game: Game;
   beforeEach(() => {
-    game = new Game(null);
+    game = new Game(null, { texts: defaultTexts });
   });
 
   describe("reload", () => {
@@ -56,7 +57,7 @@ describe("Game", () => {
         cylinder: [false, false, true, false, true, true],
         participants: [],
         deadIndices: [],
-      });
+      }, { texts: defaultTexts });
 
       const getStats = () => ({
         p: game.totalParticipants,

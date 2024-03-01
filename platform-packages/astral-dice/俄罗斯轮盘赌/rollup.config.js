@@ -28,7 +28,7 @@ const options = {
     format: "iife",
   },
   plugins: [
-    typescript(),
+    typescript({ include: ["/**/*.ts"] }),
     nodeResolve(),
     terser(),
     rollupPluginAstralDice(auto),

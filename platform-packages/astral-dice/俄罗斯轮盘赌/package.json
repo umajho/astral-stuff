@@ -2,8 +2,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "rimraf dist && rollup -c",
-    "test": "vitest"
+    "build": "rimraf dist && rollup -c"
   },
   "author": "Umaĵo",
   "homepage": "https://github.com/umajho/astral-stuff/tree/main/plugins/轮盘赌",
@@ -16,10 +15,11 @@
     "rimraf": "^5.0.5",
     "rollup": "^4.9.6",
     "rollup-plugin-astral-dice": "workspace:*",
-    "tslib": "^2.6.2",
-    "vitest": "^1.2.1"
+    "tslib": "^2.6.2"
   },
   "dependencies": {
+    "russian-roulette-adapters": "workspace:*",
+    "russian-roulette-core": "workspace:*",
     "yaml": "^2.3.4"
   }
 }

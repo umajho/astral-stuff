@@ -1,4 +1,4 @@
-import TEXTS from "./texts.js";
+import { Texts } from "./texts.ts";
 
 const DEFAULT_BULLETS = 1;
 const CYLINDER_CAPACITY = 6;
@@ -10,12 +10,16 @@ export interface State {
 }
 
 export class Game {
+  private readonly texts: Texts;
+
   private _state: State;
   get state(): State {
     return this._state;
   }
 
-  constructor(state: State | null) {
+  constructor(state: State | null, opts: { texts: Texts }) {
+    this.texts = opts.texts;
+
     if (state) {
       this._state = state;
     } else {
@@ -29,18 +33,20 @@ export class Game {
       n = this.totalBullets;
     }
 
-    if (!n) return TEXTS.BULLETS_0;
-    if (n > CYLINDER_CAPACITY) return TEXTS.BULLETS_TOO_MANY;
+    if (!n) return this.texts.BULLETS_0;
+    if (n > CYLINDER_CAPACITY) return this.texts.BULLETS_TOO_MANY;
 
     this._state = Game.newStateWithCylinder(Game.createCylinder(n));
     return n === CYLINDER_CAPACITY
-      ? TEXTS.BULLETS_FULL
-      : TEXTS.RELOADED.replace("{bullets}", n.toString());
+      ? this.texts.BULLETS_FULL
+      : this.texts.RELOADED.replace("{bullets}", n.toString());
   }
 
   fire(sender: string): string {
     for (const idx of this._state.deadIndices) {
-      if (this._state.participants[idx] === sender) return TEXTS.ALREADY_DEAD;
+      if (this._state.participants[idx] === sender) {
+        return this.texts.ALREADY_DEAD;
+      }
     }
 
     let msg: string;
@@ -48,9 +54,9 @@ export class Game {
     const pIdx = this.lookupParticipant(sender);
     if (chamber) {
       this._state.deadIndices.push(pIdx);
-      msg = TEXTS.DEAD;
+      msg = this.texts.DEAD;
     } else {
-      msg = TEXTS.ALIVE;
+      msg = this.texts.ALIVE;
     }
 
     msg += "\n" + [
@@ -64,7 +70,7 @@ export class Game {
       this._state = //
         Game.newStateWithCylinder(Game.createCylinder(this.totalBullets));
       msg += "\n\n" +
-        TEXTS.NEXT_GAME.replace("{bullets}", this.totalBullets.toString());
+        this.texts.NEXT_GAME.replace("{bullets}", this.totalBullets.toString());
     }
 
     return msg;

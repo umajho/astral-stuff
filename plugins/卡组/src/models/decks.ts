@@ -90,6 +90,11 @@ export class Deck {
     this.attributes = new DeckAttributes(scope, this);
   }
 
+  clone(destination: DeckName): Deck {
+    const dataCloned = JSON.parse(JSON.stringify(this.data));
+    return new Deck(destination, dataCloned, this.scope);
+  }
+
   get scopeID(): ScopeID {
     return this.scope.name;
   }

@@ -108,6 +108,20 @@ export const COMMAND_USAGES = {
         "根据卡组目前创建与否，用 “创建” 来用导入的数据创建尚未创建的卡组，用 “覆盖” 来用导入的数据覆盖已经创建的卡组。",
       ].join("\n"),
     },
+    "克隆为": {
+      argumentsFormat: "<新卡组名>",
+      description: [
+        [
+          "将本卡组克隆为新的卡组，本卡组和新卡组除名字外一切相同。",
+          "若卡组已经存在，报错。",
+        ].join(""),
+        "若新卡组拥有 “+模板”，则从新卡组移除该旗帜。",
+      ].join("\n"),
+    },
+    "重命名为": {
+      argumentsFormat: "<新卡组名>",
+      description: "重命名本卡组。若新名字对应的卡组已经存在，报错。",
+    },
   }),
 
   deck: withPrefixType<DeckCommand["type"]>("deck", {
@@ -236,24 +250,10 @@ export const COMMAND_USAGES = {
   }),
 
   between_decks: withPrefixType<BetweenDecksCommand["type"]>("deck", {
-    "克隆为": {
-      argumentsFormat: "<新卡组名>",
-      description: [
-        [
-          "将本卡组克隆为新的卡组，本卡组和新卡组除名字外一切相同。",
-          "若卡组已经存在，报错。",
-        ].join(""),
-        "若新卡组拥有 “+模板”，则从新卡组移除该旗帜。",
-      ].join("\n"),
-    },
     "全部添加至": {
       argumentsFormat: "<卡组名>",
       description:
         "将本卡组的所有卡牌添加至另一套卡组。若另一套卡组不存在，报错。",
-    },
-    "重命名为": {
-      argumentsFormat: "<新卡组名>",
-      description: "重命名本卡组。若新名字对应的卡组已经存在，报错。",
     },
     "挑选添加至": {
       argumentsFormat: "<卡组名> (((<数量>|全部)#)?<卡名>)+",
@@ -299,6 +299,8 @@ export const COMMAND_EXAMPLES = {
     "销毁": [],
     "导出": [],
     "导入": ["Il9fRVhBTVBMRV9fIg=="],
+    "克隆为": ["第二副牌"],
+    "重命名为": ["新名字"],
   },
   deck: {
     "概览": [],
@@ -336,9 +338,7 @@ export const COMMAND_EXAMPLES = {
     "转让至": ["9876543210 某某某"],
   },
   between_decks: {
-    "克隆为": ["第二副牌"],
     "全部添加至": ["另一副牌"],
-    "重命名为": ["新名字"],
     "挑选添加至": ["另一副牌 全部#某某某"],
     "挑选转移至": ["另一副牌 全部#某某某"],
   },

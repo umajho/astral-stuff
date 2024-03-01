@@ -378,6 +378,16 @@ function tryParseDeckExistenceCommand(
       return ["ok", { type: "导入", mode, data }];
     }
 
+    case "克隆为":
+    case "重命名为": {
+      const dest = rest?.trim() ?? null;
+      if (!dest) return errorShouldHaveArguments(TYPE, cmd);
+      if (/\s/.test(dest)) {
+        return errorBadArguments(TYPE, cmd, "卡组名中不能包含空白");
+      }
+      return ["ok", { type: cmd, destination: new DeckName(dest) }];
+    }
+
     default:
       return ["not_found"];
   }
@@ -626,9 +636,7 @@ function tryParseBetweenDecksCommand(
   }
 
   switch (cmd) {
-    case "克隆为":
-    case "全部添加至":
-    case "重命名为": {
+    case "全部添加至": {
       const dest = rest?.trim() ?? null;
       if (!dest) return errorShouldHaveArguments(TYPE, cmd);
       if (/\s/.test(dest)) {

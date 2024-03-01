@@ -137,14 +137,38 @@ export class Scope {
   declareDeck(
     name: DeckName,
   ): ["ok"] | ["error", string] {
-    if (/\s/.test("" + name)) return ["error", "卡组名中不能含有空白"];
-    if (("" + name) in this.data.decks) {
-      return ["error", `名为 “${name}” 的卡组已经存在`];
+    {
+      const result = Scope.checkDeckName(name);
+      if (result[0] === "error") return result;
+    }
+    {
+      const result = this.checkDeckNameAvailable(name);
+      if (result[0] === "error") return result;
     }
     this.data.decks["" + name] = {
       description: null,
     };
     // TODO: sort?
+    return ["ok"];
+  }
+  declareDeckByCloning(
+    name: DeckName,
+    source: DeckName,
+  ): ["ok"] | ["error", string] {
+    {
+      const result = Scope.checkDeckName(name);
+      if (result[0] === "error") return result;
+    }
+    {
+      const result = this.checkDeckNameAvailable(name);
+      if (result[0] === "error") return result;
+    }
+    {
+      const result = this.checkDeckExists(source);
+      if (result[0] === "error") return result;
+    }
+    const sourceData = this.data.decks["" + source];
+    this.data.decks["" + name] = JSON.parse(JSON.stringify(sourceData));
     return ["ok"];
   }
   updateDeckOptions(
@@ -158,10 +182,28 @@ export class Scope {
     return ["ok"];
   }
   revokeDeck(name: DeckName): ["ok"] | ["error", string] {
+    {
+      const result = this.checkDeckExists(name);
+      if (result[0] === "error") return result;
+    }
+    delete this.data.decks["" + name];
+    return ["ok"];
+  }
+
+  static checkDeckName(name: DeckName): ["ok"] | ["error", string] {
+    if (/\s/.test("" + name)) return ["error", "卡组名中不能含有空白"];
+    return ["ok"];
+  }
+  checkDeckNameAvailable(name: DeckName): ["ok"] | ["error", string] {
+    if (("" + name) in this.data.decks) {
+      return ["error", `名为 “${name}” 的卡组已经存在`];
+    }
+    return ["ok"];
+  }
+  checkDeckExists(name: DeckName): ["ok"] | ["error", string] {
     if (!(("" + name) in this.data.decks)) {
       return ["error", `不存在名为 “${name}” 的卡组`];
     }
-    delete this.data.decks["" + name];
     return ["ok"];
   }
 }

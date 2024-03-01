@@ -79,7 +79,9 @@ export type DeckExistenceCommand =
   }
   | { type: "销毁" }
   | { type: "导出" }
-  | { type: "导入"; mode: "create" | "overwrite"; data: any };
+  | { type: "导入"; mode: "create" | "overwrite"; data: any }
+  | { type: "克隆为"; destination: DeckName }
+  | { type: "重命名为"; destination: DeckName };
 
 export type DeckCommand =
   // 信息
@@ -133,9 +135,7 @@ export type DeckHandCommand =
   | { type: "转让至"; receiverID: UserID; cards: CardNameWithOptionalAmount[] };
 
 export type BetweenDecksCommand =
-  | { type: "克隆为" }
   | { type: "全部添加至" }
-  | { type: "重命名为" }
   | {
     type: "挑选添加至" | "挑选转移至";
     cards: CardNameWithOptionalAmount[];

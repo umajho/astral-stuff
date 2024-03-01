@@ -66,6 +66,10 @@ export class DeckExistenceCommandExecutor {
       case "导出":
       case "导入":
         return ["todo"];
+      case "克隆为":
+        return this.execute克隆为(cmd);
+      case "重命名为":
+        return this.execute重命名为(cmd);
       default:
         exhaustive(cmd);
     }
@@ -87,6 +91,38 @@ export class DeckExistenceCommandExecutor {
       "ok",
       `成功销毁卡组 “${this.deck.name}”。`,
       { scopes: [this.scope], deleteDecks: [this.deck.name] },
+    ];
+  }
+
+  execute克隆为(
+    cmd: DeckExistenceCommand & { type: "克隆为" },
+  ): ExecutionResult {
+    const declareResult = //
+      this.scope.declareDeckByCloning(cmd.destination, this.deck.name);
+    if (declareResult[0] === "error") return declareResult;
+    const cloned = this.deck.clone(cmd.destination);
+
+    return [
+      "ok",
+      `成功将卡组 “${this.deck.name}” 克隆为 “${cmd.destination.deckName}”`,
+      { scopes: [this.scope], decks: [cloned] },
+    ];
+  }
+
+  execute重命名为(
+    cmd: DeckExistenceCommand & { type: "重命名为" },
+  ): ExecutionResult {
+    const declareResult = //
+      this.scope.declareDeckByCloning(cmd.destination, this.deck.name);
+    if (declareResult[0] === "error") return declareResult;
+    const cloned = this.deck.clone(cmd.destination);
+
+    this.scope.revokeDeck(this.deck.name);
+
+    return [
+      "ok",
+      `成功将卡组 “${this.deck.name}” 重命名为 “${cmd.destination.deckName}”`,
+      { scopes: [this.scope], decks: [cloned], deleteDecks: [this.deck.name] },
     ];
   }
 }

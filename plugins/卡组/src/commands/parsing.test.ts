@@ -223,6 +223,24 @@ const COMMAND_CASES = {
         },
       },
     },
+    "克隆为": {
+      examples: {
+        "第二副牌": {
+          type: "deck_existence",
+          deckName: TEST_DECK_NAME,
+          payload: { type: "克隆为", destination: new DeckName("第二副牌") },
+        },
+      },
+    },
+    "重命名为": {
+      examples: {
+        "新名字": {
+          type: "deck_existence",
+          deckName: TEST_DECK_NAME,
+          payload: { type: "重命名为", destination: new DeckName("新名字") },
+        },
+      },
+    },
   },
   deck: {
     "概览": {
@@ -535,16 +553,6 @@ const COMMAND_CASES = {
     },
   },
   between_decks: {
-    "克隆为": {
-      examples: {
-        "第二副牌": {
-          type: "between_decks",
-          subjectDeckName: TEST_DECK_NAME,
-          objectDeckName: new DeckName("第二副牌"),
-          payload: { type: "克隆为" },
-        },
-      },
-    },
     "全部添加至": {
       examples: {
         "另一副牌": {
@@ -552,16 +560,6 @@ const COMMAND_CASES = {
           subjectDeckName: TEST_DECK_NAME,
           objectDeckName: new DeckName("另一副牌"),
           payload: { type: "全部添加至" },
-        },
-      },
-    },
-    "重命名为": {
-      examples: {
-        "新名字": {
-          type: "between_decks",
-          subjectDeckName: TEST_DECK_NAME,
-          objectDeckName: new DeckName("新名字"),
-          payload: { type: "重命名为" },
         },
       },
     },

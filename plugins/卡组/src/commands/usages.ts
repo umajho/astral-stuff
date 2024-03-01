@@ -344,7 +344,7 @@ export const COMMAND_EXAMPLES = {
   },
 } as const satisfies {
   [Type in CommandType]: {
-    [Name in keyof (typeof COMMAND_USAGES)[Type]]: string[];
+    [Name in keyof (typeof COMMAND_USAGES)[Type]]: readonly string[];
   };
 };
 

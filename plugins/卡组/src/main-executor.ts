@@ -23,10 +23,7 @@ export type ExecutionResult =
   | ["todo", string?];
 export type Saver =
   | null
-  | { scopes: Scope[] }
-  | { scopes: Scope[]; decks: Deck[] }
-  | { scopes: null; decks: Deck[] }
-  | { scopes: Scope[]; deleteDecks: DeckName[] };
+  | { scopes: Scope[]; decks?: Deck[]; deleteDecks?: DeckName[] };
 
 export class MainExecutor {
   private readonly repo: Repo;
@@ -196,16 +193,13 @@ export class MainExecutor {
       case "ok": {
         const saver = execResult[2];
         if (saver) {
-          for (const deck of ("decks" in saver && saver.decks) || []) {
+          for (const deck of saver.decks ?? []) {
             this.repo.saveDeckData(deck);
           }
-          for (
-            const deckName of ("deleteDecks" in saver && saver.deleteDecks) ||
-              []
-          ) {
+          for (const deckName of saver.deleteDecks ?? []) {
             this.repo.deleteDeck(deckName, scope.name);
           }
-          for (const scope of ("scopes" in saver && saver.scopes) || []) {
+          for (const scope of saver.scopes) {
             this.repo.saveScopeData(scope);
           }
         }

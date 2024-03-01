@@ -65,7 +65,7 @@ export class DeckDiscardPileCommandExecutor {
     return [
       "ok",
       "已将弃牌堆中的全部卡牌回收至抽牌堆中。",
-      { scopes: null, decks: [this.deck] },
+      { scopes: [this.scope], decks: [this.deck] },
     ];
   }
 
@@ -80,7 +80,7 @@ export class DeckDiscardPileCommandExecutor {
     return [
       "ok",
       "已删除弃牌堆中的全部卡牌",
-      { scopes: null, decks: [this.deck] },
+      { scopes: [this.scope], decks: [this.deck] },
     ];
   }
 }

@@ -115,7 +115,7 @@ export class DeckCommandExecutor {
     // TODO: 也许统计信息应该由 `addCards` 返回。
     let msg = `成功添加 ${summarizeCards(cmd.cards)}。`;
 
-    return ["ok", msg, { scopes: null, decks: [this.deck] }];
+    return ["ok", msg, { scopes: [this.scope], decks: [this.deck] }];
   }
 
   execute删除(cmd: DeckCommand & { type: "删除" }): ExecutionResult {
@@ -123,7 +123,11 @@ export class DeckCommandExecutor {
     if (deleteResult[0] === "error") return deleteResult;
 
     // TODO!!: 应该像 `execute添加` 一样包含统计信息。
-    return ["ok", "成功删除卡牌。", { scopes: null, decks: [this.deck] }];
+    return [
+      "ok",
+      "成功删除卡牌。",
+      { scopes: [this.scope], decks: [this.deck] },
+    ];
   }
 
   execute洗牌(_cmd: DeckCommand & { type: "洗牌" }): ExecutionResult {

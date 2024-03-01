@@ -110,7 +110,7 @@ class MockLib implements AstralDiceAPI {
     this.store[key] = value;
   }
   setValueExpireTime(key: string, zero: 0): void {
-    if (!zero) throw new Error("unimplemented");
+    if (zero !== 0) throw new Error("unimplemented");
     this.runtime.__deleteValue(key);
   }
   getConfig(key: string): String {

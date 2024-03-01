@@ -32,10 +32,10 @@ importers:
         version: 1.2.2(vitest@1.2.1)
       astral-dice-lib-mock:
         specifier: workspace:*
-        version: link:../../supports/astral-dice-lib-mock
+        version: link:../../support-packages/astral-dice-lib-mock
       astral-dice-types:
         specifier: workspace:*
-        version: link:../../supports/astral-dice-types
+        version: link:../../support-packages/astral-dice-types
       js-base64:
         specifier: ^3.7.6
         version: 3.7.6
@@ -50,7 +50,7 @@ importers:
         version: 4.9.6
       rollup-plugin-astral-dice:
         specifier: workspace:*
-        version: link:../../supports/rollup-plugin-astral-dice
+        version: link:../../support-packages/rollup-plugin-astral-dice
       snabbdom:
         specifier: 3.5.1
         version: 3.5.1
@@ -87,7 +87,7 @@ importers:
         version: 11.1.6(rollup@4.9.6)(tslib@2.6.2)(typescript@5.3.3)
       astral-dice-types:
         specifier: workspace:*
-        version: link:../../supports/astral-dice-types
+        version: link:../../support-packages/astral-dice-types
       rimraf:
         specifier: ^5.0.5
         version: 5.0.5
@@ -96,7 +96,7 @@ importers:
         version: 4.9.6
       rollup-plugin-astral-dice:
         specifier: workspace:*
-        version: link:../../supports/rollup-plugin-astral-dice
+        version: link:../../support-packages/rollup-plugin-astral-dice
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
@@ -104,15 +104,15 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
 
-  supports/astral-dice-lib-mock:
+  support-packages/astral-dice-lib-mock:
     devDependencies:
       astral-dice-types:
         specifier: workspace:*
         version: link:../astral-dice-types
 
-  supports/astral-dice-types: {}
+  support-packages/astral-dice-types: {}
 
-  supports/rollup-plugin-astral-dice:
+  support-packages/rollup-plugin-astral-dice:
     dependencies:
       '@iarna/toml':
         specifier: ^2.2.5

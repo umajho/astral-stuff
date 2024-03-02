@@ -3,11 +3,14 @@ import packageJSON from "../package.json" assert { type: "json" };
 import { createInterface } from "node:readline";
 
 import { MockRuntime, Place } from "astral-dice-lib-mock";
+
+import { main as astralMain, MainPrefix } from "../src/astral-main.ts";
+
 import { UserID } from "../src/ids.ts";
 import { MainExecutor } from "../src/main-executor.ts";
 // @ts-ignore
 import { keywordRegexp } from "../core-configs.js";
-import { DEFAULT_ROOT_PREFIX } from "../src/consts.ts";
+import { DEFAULT_ROOT_PREFIX, PLUGIN_NAME } from "../src/consts.ts";
 
 const readline = createInterface({
   input: process.stdin,
@@ -53,16 +56,13 @@ function evaluate(rtm: MockRuntime, senderID: UserID, input: string) {
   const rootPrefix = DEFAULT_ROOT_PREFIX;
 
   rtm.useLib((lib) => {
-    const executor = //
-      new MainExecutor(lib, {
-        info: packageJSON,
-        rootPrefix,
-        mode: mainPrefix === rootPrefix ? "regular" : "for_scope_default",
-        inputFull: input,
-        inputAfterPrefix: restText,
-        senderID,
-      });
-    executor.execute();
+    astralMain(lib, {
+      pluginName: PLUGIN_NAME,
+      mainPrefix: mainPrefix as MainPrefix,
+      restText,
+      senderID,
+      rootPrefix,
+    });
   });
 }
 

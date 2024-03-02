@@ -10,13 +10,18 @@ export class PluginCommandExecutor {
     private readonly scope: Scope,
     private readonly senderID: UserID,
     private readonly opts: {
+      pluginName: string;
       rootPrefix: string;
+      info: { version: string; homepage: string };
       usageURL: string | null;
+      mainAdmins: UserID[];
     },
   ) {}
 
-  execute(cmd: Exclude<PluginCommand, { type: "概览" }>): ExecutionResult {
+  execute(cmd: PluginCommand): ExecutionResult {
     switch (cmd.type) {
+      case "概览":
+        return this.execute概览(cmd);
       case "帮助":
         return this.execute帮助(cmd);
       case "列表":
@@ -26,6 +31,16 @@ export class PluginCommandExecutor {
       default:
         exhaustive(cmd);
     }
+  }
+
+  private execute概览(cmd: PluginCommand & { type: "概览" }): ExecutionResult {
+    const text = generatePluginInfoText(this.opts.info, {
+      pluginName: this.opts.pluginName,
+      mainAdmins: this.opts.mainAdmins,
+      scope: this.scope,
+    });
+
+    return ["ok", text, null];
   }
 
   private execute帮助(cmd: PluginCommand & { type: "帮助" }): ExecutionResult {
@@ -80,4 +95,44 @@ export class PluginCommandExecutor {
       { scopes: [this.scope] },
     ];
   }
+}
+
+function generatePluginInfoText(
+  info: { version: string; homepage: string },
+  opts: {
+    pluginName: string;
+    mainAdmins: UserID[];
+    scope: Scope | null;
+  },
+): string {
+  const lines = [
+    `= ${opts.pluginName}插件 =`,
+    "版本：" + info.version,
+    "主页：" + info.homepage,
+    "主管理员：" + opts.mainAdmins.map((a) => "" + a).join("、"),
+    "",
+    "通过 “卡组帮助” 获取插件用法。",
+    "",
+    "== 关于本群 ==",
+  ];
+  if (opts.scope) {
+    lines.push(
+      `所属领域：“${opts.scope.name}”（含 ${opts.scope.groups.length} 个群）`,
+    );
+  } else {
+    lines.push(
+      "本群不属于任何领域，将不响应除本命令（“卡组”）外的其他命令。",
+    );
+  }
+  lines.push("若要调整领域设置，请修改插件本体文件中的 “scopes” 字段。");
+  if (opts.scope) {
+    lines.push(...[
+      "",
+      `== 关于领域 “${opts.scope.name}”`,
+      "=== 属性 ===",
+      opts.scope.generateAttributesText(),
+    ]);
+  }
+
+  return lines.join("\n");
 }

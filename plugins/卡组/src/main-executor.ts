@@ -1,8 +1,6 @@
-import { AstralDiceAPI } from "astral-dice-types";
-
 import { exhaustive } from "ts-utils";
 
-import { Command, findCommandUsageHeadsByName } from "./commands/mod.ts";
+import { Command } from "./commands/mod.ts";
 import { DeckCommandExecutor } from "./executors/deck.ts";
 import { DeckDiscardPileCommandExecutor } from "./executors/deck_discard_pile.ts";
 import { DeckExistenceCommandExecutor } from "./executors/deck_existence.ts";
@@ -15,6 +13,7 @@ import { Repo } from "./repo.ts";
 export type ExecutionResult =
   | ["ok", string, Saver]
   | ["error", string]
+  | ["error_2", ["no_deck", { deckName: DeckName }]]
   | ["todo", string?];
 export type Saver =
   | null
@@ -25,16 +24,17 @@ export class MainExecutor {
   private readonly repo: Repo;
   private readonly info: { version: string; homepage: string };
   private readonly rootPrefix: string;
+  private readonly usageURL: string | null;
   private readonly scope: Scope;
 
   private readonly mainAdmins: UserID[];
   private readonly senderID: UserID;
   constructor(
-    private readonly api: AstralDiceAPI,
     opts: {
       pluginName: string;
       info: { version: string; homepage: string };
       rootPrefix: string;
+      usageURL: string | null;
       repo: Repo;
       scope: Scope;
       mainAdmins: UserID[];
@@ -46,6 +46,7 @@ export class MainExecutor {
     this.pluginName = opts.pluginName;
     this.info = opts.info;
     this.rootPrefix = opts.rootPrefix;
+    this.usageURL = opts.usageURL;
     this.scope = opts.scope;
     this.mainAdmins = opts.mainAdmins;
     this.senderID = opts.senderID;
@@ -65,7 +66,7 @@ export class MainExecutor {
           pluginName: this.pluginName,
           rootPrefix: this.rootPrefix,
           info: this.info,
-          usageURL: ("" + this.api.getConfig("usage-url")) || null,
+          usageURL: this.usageURL,
           mainAdmins: this.mainAdmins,
         });
         return executor.execute(cmd.payload);
@@ -141,27 +142,7 @@ export class MainExecutor {
       const deck = new Deck(deckName, deckData, scope);
       return cb(deck, payload);
     } else {
-      const possibleIntentions: string[] = findCommandUsageHeadsByName(
-        "" + deckName,
-        { rootPrefix: this.rootPrefix },
-      );
-
-      return [
-        "error",
-        [
-          `领域 “${scope.name}” 当中不存在卡组 “${deckName}”`,
-          "",
-          `（发送 “${this.rootPrefix}：${deckName} 创建” 创建该卡组。）`,
-          `（发送 “${this.rootPrefix}帮助 卡组存在::创建” 查询前述命令的用法。）`,
-          ...(possibleIntentions.length
-            ? [
-              `（是否其实想使用：${
-                possibleIntentions.map((x) => `“${x}”`).join("")
-              }？）`,
-            ]
-            : []),
-        ].join("\n"),
-      ];
+      return ["error_2", ["no_deck", { deckName }]];
     }
   }
 }

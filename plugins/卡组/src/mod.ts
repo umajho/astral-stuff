@@ -5,11 +5,16 @@ import { exhaustive } from "ts-utils";
 import packageJSON from "../package.json" assert { type: "json" };
 
 import { DEFAULT_ROOT_PREFIX, PLUGIN_NAME } from "./consts.ts";
-import { GroupID, UserID } from "./ids.ts";
+import { DeckName, GroupID, ScopeID, UserID } from "./ids.ts";
 import { ExecutionResult, MainExecutor } from "./main-executor.ts";
 import { Scope, Scopes } from "./models/scopes.ts";
 import { AstralRepo, Repo } from "./repo.ts";
-import { Command, parseCommand, parseDeckCommand } from "./commands/mod.ts";
+import {
+  Command,
+  findCommandUsageHeadsByName,
+  parseCommand,
+  parseDeckCommand,
+} from "./commands/mod.ts";
 
 type MainPrefix = "卡组" | ":" | "：";
 
@@ -26,6 +31,7 @@ function main(
   },
 ) {
   const repo = new AstralRepo(api);
+  const usageURL = ("" + api.getConfig("usage-url")) || null;
   const mainAdmins = getMainAdmins(api);
   const scope = getScope(api, { repo, mainAdmins });
 
@@ -45,10 +51,11 @@ function main(
   if (!scope) throw new Error("unreachable");
 
   const executor = //
-    new MainExecutor(api, {
+    new MainExecutor({
       pluginName: opts.pluginName,
       info: packageJSON,
       rootPrefix: opts.rootPrefix,
+      usageURL,
       repo,
       scope,
       senderID: opts.senderID,
@@ -57,6 +64,7 @@ function main(
   const result = executor.execute(cmd);
 
   processExecutionResult(api, result, {
+    rootPrefix: opts.rootPrefix,
     repo,
     scope,
     inputFull: opts.mainPrefix + opts.restText,
@@ -120,6 +128,7 @@ function processExecutionResult(
   api: AstralDiceAPI,
   result: ExecutionResult,
   opts: {
+    rootPrefix: string;
     repo: Repo;
     scope: Scope;
     /**
@@ -146,6 +155,18 @@ function processExecutionResult(
       api.reply(result[1]);
       break;
     }
+    case "error_2": {
+      const err = result[1];
+      switch (err[0]) {
+        case "no_deck":
+          result = convertExecutionErrorNoDeck({
+            rootPrefix: opts.rootPrefix,
+            scopeID: opts.scope.name,
+            deckName: err[1].deckName,
+          });
+          break;
+      }
+    }
     case "error":
       api.reply("错误：" + result[1]);
       break;
@@ -162,6 +183,34 @@ function processExecutionResult(
     default:
       exhaustive(result);
   }
+}
+
+function convertExecutionErrorNoDeck(opts: {
+  rootPrefix: string;
+  scopeID: ScopeID;
+  deckName: DeckName;
+}): ["error", string] {
+  const possibleIntentions: string[] = findCommandUsageHeadsByName(
+    "" + opts.deckName,
+    { rootPrefix: opts.rootPrefix },
+  );
+
+  return [
+    "error",
+    [
+      `领域 “${opts.scopeID}” 当中不存在卡组 “${opts.deckName}”`,
+      "",
+      `（发送 “${opts.rootPrefix}：${opts.deckName} 创建” 创建该卡组。）`,
+      `（发送 “${opts.rootPrefix}帮助 卡组存在::创建” 查询前述命令的用法。）`,
+      ...(possibleIntentions.length
+        ? [
+          `（是否其实想使用：${
+            possibleIntentions.map((x) => `“${x}”`).join("")
+          }？）`,
+        ]
+        : []),
+    ].join("\n"),
+  ];
 }
 
 {

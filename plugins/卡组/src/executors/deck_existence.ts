@@ -1,9 +1,10 @@
+import { exhaustive } from "ts-utils";
+
 import { DeckExistenceCommand } from "../commands/mod.ts";
 import { DeckName, UserID } from "../ids.ts";
 import { ExecutionResult } from "../main-executor.ts";
 import { Deck, makeNewDeckData } from "../models/decks.ts";
 import { Scope } from "../models/scopes.ts";
-import { exhaustive } from "../ts-utils.ts";
 
 export class DeckExistenceCommandExecutor {
   constructor(

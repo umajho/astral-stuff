@@ -1,5 +1,7 @@
 import { AstralDiceAPI } from "astral-dice-types";
 
+import { exhaustive } from "ts-utils";
+
 import packageJSON from "../package.json" assert { type: "json" };
 
 import { DEFAULT_ROOT_PREFIX, PLUGIN_NAME } from "./consts.ts";
@@ -8,7 +10,6 @@ import { ExecutionResult, MainExecutor } from "./main-executor.ts";
 import { Scope, Scopes } from "./models/scopes.ts";
 import { AstralRepo, Repo } from "./repo.ts";
 import { Command, parseCommand, parseDeckCommand } from "./commands/mod.ts";
-import { exhaustive } from "./ts-utils.ts";
 
 type MainPrefix = "卡组" | ":" | "：";
 

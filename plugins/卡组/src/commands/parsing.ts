@@ -1,7 +1,7 @@
 import { atob } from "js-base64";
 
-import { trimSpacesExceptNewLines } from "../js-utils.ts";
-import { exhaustive } from "../ts-utils.ts";
+import { trimSpacesExceptNewLines } from "js-utils";
+import { exhaustive } from "ts-utils";
 
 import {
   errorBadArguments,

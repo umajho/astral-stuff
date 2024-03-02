@@ -1,5 +1,7 @@
 import { AstralDiceAPI } from "astral-dice-types";
 
+import { exhaustive } from "ts-utils";
+
 import { Command, findCommandUsageHeadsByName } from "./commands/mod.ts";
 import { DeckCommandExecutor } from "./executors/deck.ts";
 import { DeckDiscardPileCommandExecutor } from "./executors/deck_discard_pile.ts";
@@ -9,7 +11,6 @@ import { DeckName, UserID } from "./ids.ts";
 import { Deck } from "./models/decks.ts";
 import { Scope } from "./models/scopes.ts";
 import { Repo } from "./repo.ts";
-import { exhaustive } from "./ts-utils.ts";
 
 export type ExecutionResult =
   | ["ok", string, Saver]

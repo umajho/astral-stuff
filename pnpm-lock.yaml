@@ -14,6 +14,9 @@ importers:
 
   packages/russian-roulette-core:
     devDependencies:
+      js-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/js-utils
       vitest:
         specifier: ^1.2.1
         version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
@@ -57,6 +60,12 @@ importers:
 
   plugins/卡组:
     dependencies:
+      js-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/js-utils
+      ts-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/ts-utils
       yaml:
         specifier: ^2.3.4
         version: 2.3.4
@@ -127,6 +136,12 @@ importers:
 
   support-packages/astral-dice-types: {}
 
+  support-packages/js-utils:
+    devDependencies:
+      vitest:
+        specifier: ^1.2.1
+        version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
+
   support-packages/rollup-plugin-astral-dice:
     dependencies:
       '@iarna/toml':
@@ -136,6 +151,8 @@ importers:
       rollup:
         specifier: ^4.9.6
         version: 4.9.6
+
+  support-packages/ts-utils: {}
 
 packages:
 

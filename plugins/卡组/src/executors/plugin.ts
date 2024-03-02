@@ -1,9 +1,10 @@
+import { exhaustive } from "ts-utils";
+
 import { ExecutionResult } from "../main-executor.ts";
 import { PluginCommand } from "../commands/mod.ts";
 import { Scope } from "../models/scopes.ts";
 import { generateUsage } from "../usage.ts";
 import { UserID } from "../ids.ts";
-import { exhaustive } from "../ts-utils.ts";
 
 export class PluginCommandExecutor {
   constructor(

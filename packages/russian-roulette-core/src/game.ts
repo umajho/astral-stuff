@@ -1,3 +1,5 @@
+import { shuffle } from "js-utils";
+
 import { Texts } from "./texts.ts";
 
 const DEFAULT_BULLETS = 1;
@@ -108,16 +110,6 @@ export class Game {
   }
 
   private static createCylinder(n: number): boolean[] {
-    /**
-     * see: https://stackoverflow.com/a/12646864
-     */
-    function shuffle<T>(arr: T[]) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-
     const cylinder: boolean[] = [];
     for (let i = 0; i < CYLINDER_CAPACITY; i++) {
       cylinder.push(i < n);

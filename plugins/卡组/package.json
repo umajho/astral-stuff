@@ -33,6 +33,8 @@
     "vitest": "^1.2.1"
   },
   "dependencies": {
+    "js-utils": "workspace:*",
+    "ts-utils": "workspace:*",
     "yaml": "^2.3.4"
   }
 }

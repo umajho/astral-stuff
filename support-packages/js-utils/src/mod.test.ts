@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { intersperse, trimSpacesExceptNewLines } from "./js-utils";
+import { intersperse, trimSpacesExceptNewLines } from "./mod";
 
 describe("intersperse", () => {
   const table: [[any[], any], any][] = [

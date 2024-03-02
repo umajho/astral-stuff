@@ -1,11 +1,12 @@
+import { randomInt, shuffle } from "js-utils";
+import { exhaustive } from "ts-utils";
+
 import {
   AttributeSetters,
   CardNameWithDescriptionAndOptionalAmount,
   CardNameWithOptionalAmount,
 } from "../commands/types.ts";
 import { CardName, DeckName, ScopeID, UserID } from "../ids.ts";
-import { randomInt, shuffle } from "../js-utils.ts";
-import { exhaustive } from "../ts-utils.ts";
 import { DeckAttributes } from "./deck-attributes.ts";
 import {
   DiscardFlags,

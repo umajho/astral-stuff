@@ -1,5 +1,6 @@
+import { exhaustive } from "ts-utils";
+
 import { AttributeSetters } from "../commands/types.ts";
-import { exhaustive } from "../ts-utils.ts";
 import { Deck } from "./decks.ts";
 import { DeckInScope, Scope } from "./scopes.ts";
 

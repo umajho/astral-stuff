@@ -1,0 +1,8 @@
+{
+  "name": "ts-utils",
+  "main": "src/mod.ts",
+  "type": "module",
+  "author": "Umaĵo",
+  "license": "MIT",
+  "devDependencies": {}
+}

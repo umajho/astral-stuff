@@ -1,4 +1,4 @@
-import { exhaustive } from "../ts-utils.ts";
+import { exhaustive } from "ts-utils";
 
 import { DeckName, UserID } from "../ids.ts";
 

@@ -1,0 +1,24 @@
+{
+  "name": "deck-adapters",
+  "version": "1.0.0",
+  "main": "src/mod.ts",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "Umaĵo",
+  "homepage": "https://github.com/umajho/astral-stuff/tree/main/plugins/轮盘赌",
+  "license": "MIT",
+  "devDependencies": {
+    "snabbdom": "3.5.1",
+    "ts-utils": "workspace:*",
+    "vitest": "^1.2.1"
+  },
+  "dependencies": {
+    "js-base64": "^3.7.6",
+    "js-utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "deck-core": "workspace:*"
+  }
+}

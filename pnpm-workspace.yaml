@@ -1,5 +1,4 @@
 packages:
   - packages/*
   - platform-packages/*/*
-  - plugins/*
   - support-packages/*

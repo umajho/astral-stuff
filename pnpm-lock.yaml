@@ -6,6 +6,41 @@ settings:
 
 importers:
 
+  packages/deck-adapters:
+    dependencies:
+      deck-core:
+        specifier: workspace:*
+        version: link:../deck-core
+      js-base64:
+        specifier: ^3.7.6
+        version: 3.7.6
+      js-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/js-utils
+    devDependencies:
+      snabbdom:
+        specifier: 3.5.1
+        version: 3.5.1
+      ts-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/ts-utils
+      vitest:
+        specifier: ^1.2.1
+        version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
+
+  packages/deck-core:
+    dependencies:
+      js-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/js-utils
+    devDependencies:
+      ts-utils:
+        specifier: workspace:*
+        version: link:../../support-packages/ts-utils
+      vitest:
+        specifier: ^1.2.1
+        version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
+
   packages/russian-roulette-adapters:
     devDependencies:
       russian-roulette-core:
@@ -58,17 +93,20 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
 
-  plugins/卡组:
+  platform-packages/astral-dice/卡组:
     dependencies:
-      js-base64:
-        specifier: ^3.7.6
-        version: 3.7.6
+      deck-adapters:
+        specifier: workspace:*
+        version: link:../../../packages/deck-adapters
+      deck-core:
+        specifier: workspace:*
+        version: link:../../../packages/deck-core
       js-utils:
         specifier: workspace:*
-        version: link:../../support-packages/js-utils
+        version: link:../../../support-packages/js-utils
       ts-utils:
         specifier: workspace:*
-        version: link:../../support-packages/ts-utils
+        version: link:../../../support-packages/ts-utils
       yaml:
         specifier: ^2.3.4
         version: 2.3.4
@@ -93,10 +131,10 @@ importers:
         version: 1.2.2(vitest@1.2.1)
       astral-dice-lib-mock:
         specifier: workspace:*
-        version: link:../../support-packages/astral-dice-lib-mock
+        version: link:../../../support-packages/astral-dice-lib-mock
       astral-dice-types:
         specifier: workspace:*
-        version: link:../../support-packages/astral-dice-types
+        version: link:../../../support-packages/astral-dice-types
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -108,7 +146,7 @@ importers:
         version: 4.9.6
       rollup-plugin-astral-dice:
         specifier: workspace:*
-        version: link:../../support-packages/rollup-plugin-astral-dice
+        version: link:../../../support-packages/rollup-plugin-astral-dice
       snabbdom:
         specifier: 3.5.1
         version: 3.5.1

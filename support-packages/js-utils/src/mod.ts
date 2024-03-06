@@ -48,3 +48,25 @@ export function shuffle<T>(arr: T[]) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
+
+export function objectEntriesPolyfill<V>(
+  obj: { [key: string]: V },
+): [string, V][] {
+  return Object.keys(obj).map((k) => [k, obj[k]]);
+}
+
+export function arrayFlatMapPolyfill<T, U>(arr: T[], f: (el: T) => U[]): U[] {
+  const result: U[] = [];
+  for (const el of arr) {
+    result.push(...(f(el)));
+  }
+  return result;
+}
+
+export function arrayEntriesPolyfill<T>(arr: T[]): [number, T][] {
+  const result: [number, T][] = [];
+  for (let i = 0; i < arr.length; i++) {
+    result.push([i, arr[i]]);
+  }
+  return result;
+}

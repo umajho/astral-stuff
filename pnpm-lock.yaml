@@ -56,44 +56,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
 
-  platform-packages/astral-dice/俄罗斯轮盘赌:
-    dependencies:
-      russian-roulette-adapters:
-        specifier: workspace:*
-        version: link:../../../packages/russian-roulette-adapters
-      russian-roulette-core:
-        specifier: workspace:*
-        version: link:../../../packages/russian-roulette-core
-      yaml:
-        specifier: ^2.3.4
-        version: 2.3.4
-    devDependencies:
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.2.3
-        version: 15.2.3(rollup@4.9.6)
-      '@rollup/plugin-terser':
-        specifier: ^0.4.4
-        version: 0.4.4(rollup@4.9.6)
-      '@rollup/plugin-typescript':
-        specifier: ^11.1.6
-        version: 11.1.6(rollup@4.9.6)(tslib@2.6.2)(typescript@5.3.3)
-      astral-dice-types:
-        specifier: workspace:*
-        version: link:../../../support-packages/astral-dice-types
-      rimraf:
-        specifier: ^5.0.5
-        version: 5.0.5
-      rollup:
-        specifier: ^4.9.6
-        version: 4.9.6
-      rollup-plugin-astral-dice:
-        specifier: workspace:*
-        version: link:../../../support-packages/rollup-plugin-astral-dice
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
-
-  platform-packages/astral-dice/卡组:
+  platform-packages/astral-dice-星骰/deck-卡组:
     dependencies:
       deck-adapters:
         specifier: workspace:*
@@ -165,6 +128,43 @@ importers:
       vitest:
         specifier: ^1.2.1
         version: 1.2.1(@types/node@20.11.20)(@vitest/ui@1.2.2)
+
+  platform-packages/astral-dice-星骰/russian-roulette-俄罗斯轮盘赌:
+    dependencies:
+      russian-roulette-adapters:
+        specifier: workspace:*
+        version: link:../../../packages/russian-roulette-adapters
+      russian-roulette-core:
+        specifier: workspace:*
+        version: link:../../../packages/russian-roulette-core
+      yaml:
+        specifier: ^2.3.4
+        version: 2.3.4
+    devDependencies:
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.2.3(rollup@4.9.6)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.4
+        version: 0.4.4(rollup@4.9.6)
+      '@rollup/plugin-typescript':
+        specifier: ^11.1.6
+        version: 11.1.6(rollup@4.9.6)(tslib@2.6.2)(typescript@5.3.3)
+      astral-dice-types:
+        specifier: workspace:*
+        version: link:../../../support-packages/astral-dice-types
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+      rollup:
+        specifier: ^4.9.6
+        version: 4.9.6
+      rollup-plugin-astral-dice:
+        specifier: workspace:*
+        version: link:../../../support-packages/rollup-plugin-astral-dice
+      tslib:
+        specifier: ^2.6.2
+        version: 2.6.2
 
   support-packages/astral-dice-lib-mock:
     devDependencies:

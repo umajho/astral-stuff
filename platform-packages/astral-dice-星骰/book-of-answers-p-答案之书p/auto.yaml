@@ -1,0 +1,2 @@
+keywordRegexp: '^答案之书\s+(.*)$'
+program: "【执行脚本 【读项目 js】, 【正则匹配到的 0】】\n"
